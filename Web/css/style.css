@@ -1,0 +1,25 @@
+html, body {
+        height: 100%;
+        margin: 0;
+        padding: 0;
+      }
+
+      .map{
+      	height: 100%;
+        width: 50%;
+      }
+
+      #map1 {
+        float: left;
+      }
+
+      #map2{
+      	float: right;
+      }
+
+img[src='https://maps.gstatic.com/mapfiles/api-3/images/sv4.png'],
+img[src='https://maps.gstatic.com/mapfiles/api-3/images/google_dark.png'],
+.gm-style-cc,
+.gmnoprint {
+  display: none;
+}
