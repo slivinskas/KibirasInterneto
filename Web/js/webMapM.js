@@ -1,4 +1,4 @@
-size = {
+var size = {
 	width : 0,
 	height : 0,
 	update : function () {

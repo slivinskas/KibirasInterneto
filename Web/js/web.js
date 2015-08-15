@@ -1,8 +1,25 @@
+var web = {
+  lat : 42.345573,
+  lng : -71.098326,
+
+  initMaps : function(){
+    initPano();
+  },
+
+  setLocation: function (lat,lng){
+    this.lat = lat;
+    this.lng = lng;
+  }
+
+
+
+}
+
 function initPano() {
   // Note: constructed panorama objects have visible: true
   // set by default.
   var mapSetings = {
-        position: {lat: 42.345573, lng: -71.098326},
+        position: {lat: web.lat, lng: web.lng},
         addressControlOptions: {
           position: google.maps.ControlPosition.BOTTOM_CENTER
         },
@@ -20,4 +37,8 @@ function initPano() {
 
 }
 
-initPano();
+web.initPano();
+
+
+
+
