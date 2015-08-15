@@ -1,5 +1,5 @@
 $( document ).ready(function() {
-    web.initMaps();
+   // web.initMaps();
 });
 $(window ).on("resize",function(){
 		size.update();
