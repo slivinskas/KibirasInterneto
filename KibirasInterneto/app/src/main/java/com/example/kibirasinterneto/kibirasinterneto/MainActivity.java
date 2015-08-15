@@ -85,8 +85,6 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
                 diffLocation.setLatitude(oldLocation.getLatitude() - location.getLatitude());
                 diffLocation.setLongitude(oldLocation.getLongitude() - location.getLongitude());
                 oldLocation = location;
-
-                //view.loadUrl("javascript:SetLocation('40.7580441,-73.9854593')");
                 ConvertCoordinates();
             }
         };
@@ -115,7 +113,7 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
             newTeleportLocation.setLatitude(newTeleportLocation.getLatitude() + diffLocation.getLatitude());
             newTeleportLocation.setLongitude(newTeleportLocation.getLongitude() + diffLocation.getLongitude());
         }
-        view.loadUrl("javascript:web.setLocation(+"+newTeleportLocation.getLatitude()+","+newTeleportLocation.getLongitude()+")");
+        view.loadUrl("javascript:web.setLocation(+"+(newTeleportLocation.getLatitude())+","+(newTeleportLocation.getLongitude())+")");
 
     }
 
@@ -153,21 +151,23 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
             float R[] = new float[9];
             float I[] = new float[9];
             boolean success = SensorManager.getRotationMatrix(R, I, mGravity, mGeomagnetic);
+
             if (success) {
                 float orientation[] = new float[3];
                 SensorManager.getOrientation(R, orientation);
                 if (azimut != null){
-                    System.out.println(tempAz);
                     tempAz = orientation[0];
                     if (tempAz - prevAz > 0.10f || tempAz - prevAz < -0.1f){
-                        azimut = tempAz;
+                        azimut = tempAz ;
                         prevAz=azimut;
-                        System.out.println(azimut);
+                        azimut = azimut*360/(2*3.1412f);
                     }
                 } else {
                     azimut = orientation[0];
                     prevAz = azimut;// orientation contains: azimut, pitch and roll
+                    azimut = azimut*360/(2*3.1412f);
                 }
+                view.loadUrl("javascript:web.setXPos("+ (double)azimut+")");
             }
         }
 
