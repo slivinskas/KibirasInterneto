@@ -1,6 +1,7 @@
 var web = {
   lat : 42.345573,
   lng : -71.098326,
+  
 
   initMaps : function(){
     initPano();
