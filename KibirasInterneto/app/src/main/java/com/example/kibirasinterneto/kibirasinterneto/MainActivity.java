@@ -45,7 +45,7 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
         mSensorManager = (SensorManager)getSystemService(SENSOR_SERVICE);
         accelerometer = mSensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER);
         magnetometer = mSensorManager.getDefaultSensor(Sensor.TYPE_MAGNETIC_FIELD);
-        super.onCreate(savedInstanceState);
+       
 
         getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,
                 WindowManager.LayoutParams.FLAG_FULLSCREEN);
@@ -117,15 +117,9 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
     Float azimut;  // View to draw a compass
 
 
-
-
-
-
-
     private SensorManager mSensorManager;
     Sensor accelerometer;
     Sensor magnetometer;
-
 
 
     protected void onResume() {
@@ -163,6 +157,7 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
                     if (tempAz - prevAz > 0.10f || tempAz - prevAz < -0.1f){
                         azimut = tempAz;
                         prevAz=azimut;
+                        System.out.println(azimut);
                     }
                 } else {
                     azimut = orientation[0];
