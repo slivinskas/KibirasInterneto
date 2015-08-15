@@ -15,7 +15,7 @@ public class MainActivity extends AppCompatActivity {
         getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
         setContentView(R.layout.activity_main);
 
-        String url ="http://kibirasinterneto.azurewebsites.net";
+        String url ="http://kibirasinterneto.azurewebsites.net/Web/template.html";
         WebView view=(WebView) this.findViewById(R.id.webView);
         view.getSettings().setJavaScriptEnabled(true);
         view.loadUrl(url);
