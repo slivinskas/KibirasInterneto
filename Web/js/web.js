@@ -1,6 +1,7 @@
   var panoramaLeft;
   var panoramaRight;
   var outsideGoogle;
+
   function initPano() {
   // Note: constructed panorama objects have visible: true
   // set by default.
@@ -26,7 +27,11 @@
 var web = {
   lat : 42.345573,
   lng : -71.098326,
-  
+  webPov : {
+        heading: 34,
+        pitch: 10,
+        zoom: 1
+      },
 
   initMaps : function(){
     window.initPano();
@@ -40,17 +45,17 @@ var web = {
   },
 
   setZPos: function(z){
-    //TODO
-    //pitch
+    web.webPov.pitch = z;
+    panoramaLeft.setPov(web.webPov);
+    panoramaRight.setPov(web.webPov);
   },
 
   setXPos : function(x){
-    //TODO
-    //heading
+    web.webPov.heading = x;
+    panoramaLeft.setPov(web.webPov);
+    panoramaRight.setPov(web.webPov);
   }
 }
-
-//web.initMaps();
 
 
 
