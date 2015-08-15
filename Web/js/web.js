@@ -7,6 +7,7 @@ function initPano() {
           position: google.maps.ControlPosition.BOTTOM_CENTER
         },
 		disableDefaultUI: true,
+
         zoomControlOptions: {
           style: google.maps.ZoomControlStyle.SMALL
         },
@@ -16,7 +17,7 @@ function initPano() {
       document.getElementById('map1'), mapSetings);
 	  panorama = new google.maps.StreetViewPanorama(
       document.getElementById('map2'), mapSetings);
-	  
+
 }
 
 initPano();

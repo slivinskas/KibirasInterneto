@@ -16,3 +16,10 @@ html, body {
       #map2{
       	float: right;
       }
+
+img[src='https://maps.gstatic.com/mapfiles/api-3/images/sv4.png'],
+img[src='https://maps.gstatic.com/mapfiles/api-3/images/google_dark.png'],
+.gm-style-cc,
+.gmnoprint {
+  display: none;
+}
