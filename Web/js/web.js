@@ -17,7 +17,3 @@ function initPano() {
 }
 
 initPano();
-var web = {
-	
-
-}
