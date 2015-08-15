@@ -1,4 +1,5 @@
-function initPano() {
+
+/*function initPano() {
   // Note: constructed panorama objects have visible: true
   // set by default.
   var panorama = new google.maps.StreetViewPanorama(
@@ -17,6 +18,12 @@ function initPano() {
 }
 
 initPano();
+*/
+function ee(){
+alert("Veikia");
+}
+
+ee();
 var web = {
 	
 
