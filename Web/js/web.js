@@ -9,10 +9,8 @@ var web = {
   setLocation: function (lat,lng){
     this.lat = lat;
     this.lng = lng;
+    initMaps();
   }
-
-
-
 }
 
 function initPano() {
@@ -37,7 +35,7 @@ function initPano() {
 
 }
 
-web.initPano();
+web.initMaps();
 
 
 
