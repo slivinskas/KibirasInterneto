@@ -37,6 +37,16 @@ var web = {
     web.lng = lng;
     panoramaLeft.setPosition({lat:web.lat, lng:web.lng});
     panoramaRight.setPosition({lat:web.lat, lng:web.lng});
+  },
+
+  setZPos: function(z){
+    //TODO
+    //pitch
+  },
+
+  setXPos : function(x){
+    //TODO
+    //heading
   }
 }
 
