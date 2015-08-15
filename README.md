@@ -1,0 +1,3 @@
+Adform – tai programinę įrangą skaitmeninei reklamai kurianti kompanija. Pagrindinė įmonės būstinė įsikūrusi Danijoje, tačiau Adform turi atstovybes Čekijoje, Ispanijoje, Italijoje, Jungtinėje Karalystėje, Lietuvoje, Nyderlanduose, Norvegijoje, Portugalijoje, Suomijoje, Švedijoje bei Vokietijoje. Adform sparčiai plečia ne tik savo geografinę sklaidą, bet ir klientų ratą bei produktų paletę.
+
+Integruodama medijų planavimą, žiniasklaidos pirkimą, optimizavimą bei ataskaitų teikimą, įmonė padeda optimizuoti internetinės reklamos valdymą. Pagal užimamą rinkos dalį, Adform yra didžiausia skaitmeninei reklamai programinę įrangą siūlanti kompanija Skandinavijos šalyse.
