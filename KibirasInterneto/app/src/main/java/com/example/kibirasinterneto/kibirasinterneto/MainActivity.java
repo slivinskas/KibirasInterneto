@@ -22,8 +22,10 @@ import android.widget.Toast;
 public class MainActivity extends AppCompatActivity {
 
     Location oldLocation;
-    double diffLatitude = 0;
-    double diffLongitude = 0;
+    double teleportLatitude = 40.7580441;
+    double teleportLongitude =  -73.9854593;
+    Location diffLocation;
+    Location newTeleportLocation;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -37,8 +39,9 @@ public class MainActivity extends AppCompatActivity {
         WebView view = (WebView) this.findViewById(R.id.webView);
         view.getSettings().setJavaScriptEnabled(true);
         view.loadUrl(url);
-
-
+        String provider = getProviderName();
+        diffLocation = new Location(provider);
+        newTeleportLocation = new Location(provider);
         LocationManager locationManager = (LocationManager) this.getSystemService(Context.LOCATION_SERVICE);
         LocationListener locationListener = new LocationListener() {
             @Override
@@ -61,9 +64,10 @@ public class MainActivity extends AppCompatActivity {
                     return;
 
                 }
-                diffLatitude = oldLocation.getLatitude() - location.getLatitude();
-                diffLongitude = oldLocation.getLongitude() - location.getLongitude();
+                diffLocation.setLatitude(oldLocation.getLatitude() - location.getLatitude());
+                diffLocation.setLongitude(oldLocation.getLongitude() - location.getLongitude());
                 oldLocation = location;
+                ConvertCoordinates();
             }
         };
         locationManager.requestLocationUpdates(getProviderName(), 1000,
@@ -80,5 +84,17 @@ public class MainActivity extends AppCompatActivity {
         criteria.setBearingRequired(false);
         criteria.setCostAllowed(false);
         return locationManager.getBestProvider(criteria, true);
+    }
+
+    void ConvertCoordinates(){
+        if(newTeleportLocation.getLatitude() == 0 && newTeleportLocation.getLongitude() ==0){
+
+            newTeleportLocation.setLatitude(teleportLatitude);
+            newTeleportLocation.setLongitude(teleportLongitude);
+        }else {
+            newTeleportLocation.setLatitude( newTeleportLocation.getLatitude() + diffLocation.getLatitude());
+            newTeleportLocation.setLongitude(newTeleportLocation.getLongitude() + diffLocation.getLongitude());
+        }
+
     }
 }
