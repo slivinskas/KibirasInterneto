@@ -6,8 +6,7 @@ function initPano() {
         addressControlOptions: {
           position: google.maps.ControlPosition.BOTTOM_CENTER
         },
-        linksControl: false,
-        panControl: false,
+		disableDefaultUI: true,
         zoomControlOptions: {
           style: google.maps.ZoomControlStyle.SMALL
         },
