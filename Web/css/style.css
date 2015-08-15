@@ -3,6 +3,14 @@ html, body {
         margin: 0;
         padding: 0;
       }
-      #map {
+      #map1 {
         height: 100%;
+        width: 50%;
+        float: left;
+      }
+
+      #map2{
+      	height: 100%;
+        width: 50%;
+      	float: right;
       }
