@@ -4,6 +4,9 @@ package com.example.kibirasinterneto.kibirasinterneto;
 import android.app.Service;
 import android.content.Context;
 import android.content.Intent;
+import android.hardware.Sensor;
+import android.hardware.SensorEvent;
+import android.hardware.SensorManager;
 import android.location.Criteria;
 import android.location.Location;
 import android.location.LocationListener;
@@ -19,8 +22,16 @@ import android.webkit.WebView;
 import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
+import android.os.Bundle;
 
-public class MainActivity extends AppCompatActivity {
+import android.app.Activity;
+
+import android.hardware.Sensor;
+import android.hardware.SensorEvent;
+import android.hardware.SensorEventListener;
+import android.hardware.SensorManager;
+
+public class MainActivity extends AppCompatActivity implements SensorEventListener {
 
     Location oldLocation;
     double teleportLatitude = 40.7580441;
@@ -32,6 +43,11 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        // Register the sensor listeners
+        mSensorManager = (SensorManager)getSystemService(SENSOR_SERVICE);
+        accelerometer = mSensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER);
+        magnetometer = mSensorManager.getDefaultSensor(Sensor.TYPE_MAGNETIC_FIELD);
+       
 
         getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,
                 WindowManager.LayoutParams.FLAG_FULLSCREEN);
@@ -102,4 +118,59 @@ public class MainActivity extends AppCompatActivity {
         view.loadUrl("javascript:web.setLocation(+"+newTeleportLocation.getLatitude()+","+newTeleportLocation.getLongitude()+")");
 
     }
+
+    Float azimut;  // View to draw a compass
+
+
+    private SensorManager mSensorManager;
+    Sensor accelerometer;
+    Sensor magnetometer;
+
+
+    protected void onResume() {
+        super.onResume();
+        mSensorManager.registerListener(this, accelerometer, SensorManager.SENSOR_DELAY_UI);
+        mSensorManager.registerListener(this, magnetometer, SensorManager.SENSOR_DELAY_UI);
+    }
+
+    protected void onPause() {
+        super.onPause();
+        mSensorManager.unregisterListener(this);
+    }
+
+    public void onAccuracyChanged(Sensor sensor, int accuracy) {  }
+
+    float[] mGravity;
+    float[] mGeomagnetic;
+    float tempAz;
+    float prevAz;
+    public void onSensorChanged(SensorEvent event) {
+        if (event.sensor.getType() == Sensor.TYPE_ACCELEROMETER)
+            mGravity = event.values;
+        if (event.sensor.getType() == Sensor.TYPE_MAGNETIC_FIELD)
+            mGeomagnetic = event.values;
+        if (mGravity != null && mGeomagnetic != null) {
+            float R[] = new float[9];
+            float I[] = new float[9];
+            boolean success = SensorManager.getRotationMatrix(R, I, mGravity, mGeomagnetic);
+            if (success) {
+                float orientation[] = new float[3];
+                SensorManager.getOrientation(R, orientation);
+                if (azimut != null){
+                    System.out.println(tempAz);
+                    tempAz = orientation[0];
+                    if (tempAz - prevAz > 0.10f || tempAz - prevAz < -0.1f){
+                        azimut = tempAz;
+                        prevAz=azimut;
+                        System.out.println(azimut);
+                    }
+                } else {
+                    azimut = orientation[0];
+                    prevAz = azimut;// orientation contains: azimut, pitch and roll
+                }
+            }
+        }
+
+    }
+
 }
