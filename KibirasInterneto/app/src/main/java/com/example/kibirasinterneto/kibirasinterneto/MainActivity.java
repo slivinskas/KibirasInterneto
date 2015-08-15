@@ -16,6 +16,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.WindowManager;
 import android.webkit.WebView;
+import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -26,7 +27,8 @@ public class MainActivity extends AppCompatActivity {
     double teleportLongitude =  -73.9854593;
     Location diffLocation;
     Location newTeleportLocation;
-
+    String url = "http://kibirasinterneto.azurewebsites.net/Web/template.html";
+    WebView view;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -35,10 +37,10 @@ public class MainActivity extends AppCompatActivity {
                 WindowManager.LayoutParams.FLAG_FULLSCREEN);
         setContentView(R.layout.activity_main);
 
-        String url = "http://kibirasinterneto.azurewebsites.net";
-        WebView view = (WebView) this.findViewById(R.id.webView);
+        view = (WebView) this.findViewById(R.id.webView);
         view.getSettings().setJavaScriptEnabled(true);
         view.loadUrl(url);
+
         String provider = getProviderName();
         diffLocation = new Location(provider);
         newTeleportLocation = new Location(provider);
@@ -67,6 +69,8 @@ public class MainActivity extends AppCompatActivity {
                 diffLocation.setLatitude(oldLocation.getLatitude() - location.getLatitude());
                 diffLocation.setLongitude(oldLocation.getLongitude() - location.getLongitude());
                 oldLocation = location;
+
+                //view.loadUrl("javascript:SetLocation('40.7580441,-73.9854593')");
                 ConvertCoordinates();
             }
         };
@@ -92,9 +96,10 @@ public class MainActivity extends AppCompatActivity {
             newTeleportLocation.setLatitude(teleportLatitude);
             newTeleportLocation.setLongitude(teleportLongitude);
         }else {
-            newTeleportLocation.setLatitude( newTeleportLocation.getLatitude() + diffLocation.getLatitude());
+            newTeleportLocation.setLatitude(newTeleportLocation.getLatitude() + diffLocation.getLatitude());
             newTeleportLocation.setLongitude(newTeleportLocation.getLongitude() + diffLocation.getLongitude());
         }
+        view.loadUrl("javascript:web.setLocation(+"+newTeleportLocation.getLatitude()+","+newTeleportLocation.getLongitude()+")");
 
     }
 }
