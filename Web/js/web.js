@@ -1,42 +1,55 @@
   var panoramaLeft;
   var panoramaRight;
   var outsideGoogle;
-
-  function initPano() {
-  // Note: constructed panorama objects have visible: true
-  // set by default.
   var mapSetings = {
-        position: {lat: web.lat, lng: web.lng},
-        addressControlOptions: {
-          position: google.maps.ControlPosition.BOTTOM_CENTER
-        },
-		disableDefaultUI: true,
-
-        zoomControlOptions: {
-          style: google.maps.ZoomControlStyle.SMALL
-        },
-        enableCloseButton: false
+    center: mPos,
+    zoom: 1,
+    streetViewControl: true
   };
-  panoramaLeft = new google.maps.StreetViewPanorama(
-      document.getElementById('map1'), mapSetings);
-	panoramaRight = new google.maps.StreetViewPanorama(
-      document.getElementById('map2'), mapSetings);
-
-}
-
-var web = {
-  lat : 42.345573,
-  lng : -71.098326,
-  webPov : {
+  var mPos = {lat : 40.757981, lng : -73.985580};
+  var webPov = {
         heading: 34,
         pitch: 10,
         zoom: 1
-      },
+      };
 
-  initMaps : function(){
-    window.initPano();
-  },
+  var markerIcon = 'http://icons.iconarchive.com/icons/yellowicon/game-stars/256/Mario-icon.png';
 
+ 
+
+  var map1, map2;
+  var marker1,marker2;
+
+  function initPano() {
+  
+  map1 = new google.maps.Map(document.getElementById('map1'), mapSetings);
+  map2 = new google.maps.Map(document.getElementById('map2'), mapSetings);
+  marker1 = new google.maps.Marker({
+     position: mPos,
+     icon: markerIcon,
+     title: 'Cafe'
+  });
+  marker2 = new google.maps.Marker({
+     position: mPos,
+     icon: markerIcon,
+     title: 'Cafe'
+  });
+  marker1.setMap(map1);
+  marker2.setMap(map2);
+  panoramaLeft = map1.getStreetView();
+  panoramaRight = map2.getStreetView();
+
+  panoramaLeft.setPosition(mPos);
+  panoramaRight.setPosition(mPos);
+  panoramaLeft.setPov(/** @type {google.maps.StreetViewPov} */(webPov));
+  panoramaRight.setPov(/** @type {google.maps.StreetViewPov} */(webPov));
+  panoramaLeft.setVisible(true);
+  panoramaRight.setVisible(true);
+}
+
+var web = {
+  lat : mPos.lat,//42.345573,
+  lng : mPos.lng,//-71.098326,
   setLocation: function (lat,lng){
     web.lat = lat;
     web.lng = lng;
@@ -45,18 +58,14 @@ var web = {
   },
 
   setZPos: function(z){
-    web.webPov.pitch = z;
-    panoramaLeft.setPov(web.webPov);
-    panoramaRight.setPov(web.webPov);
+    webPov.pitch = z;
+    panoramaLeft.setPov(webPov);
+    panoramaRight.setPov(webPov);
   },
 
   setXPos : function(x){
-    web.webPov.heading = x;
-    panoramaLeft.setPov(web.webPov);
-    panoramaRight.setPov(web.webPov);
+    webPov.heading = x;
+    panoramaLeft.setPov(webPov);
+    panoramaRight.setPov(webPov);
   }
 }
-
-
-
-
