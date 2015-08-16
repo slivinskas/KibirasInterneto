@@ -1,10 +1,6 @@
 package com.example.kibirasinterneto.kibirasinterneto;
 
-
-import android.app.Service;
 import android.content.Context;
-import android.content.DialogInterface;
-import android.content.Intent;
 import android.hardware.Sensor;
 import android.hardware.SensorEvent;
 import android.hardware.SensorManager;
@@ -12,52 +8,44 @@ import android.location.Criteria;
 import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
-import android.provider.Settings;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.view.Menu;
-import android.view.MenuItem;
-import android.view.MotionEvent;
 import android.view.View;
 import android.view.WindowManager;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
-import android.widget.Button;
 import android.widget.ImageView;
-import android.widget.TextView;
-import android.widget.Toast;
-import android.os.Bundle;
-
-import android.app.Activity;
-
-import android.hardware.Sensor;
-import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener;
-import android.hardware.SensorManager;
 
 public class MainActivity extends AppCompatActivity implements SensorEventListener {
+
     // 38.909622,-77.034628
     // time sq 40.7580441, -73.9854593
     //54.9019108,23.9377343
+
     Location oldLocation;
     double teleportLatitude = 40.7580441;
     double teleportLongitude = -73.9854593;
+
     Location diffLocation;
     Location newTeleportLocation;
+
     String url = "http://kibirasinterneto.azurewebsites.net/Web/template.html";
+
     WebView view;
+
     Boolean WebViewOver = false;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
         // Register the sensor listeners
         mSensorManager = (SensorManager)getSystemService(SENSOR_SERVICE);
         accelerometer = mSensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER);
         magnetometer = mSensorManager.getDefaultSensor(Sensor.TYPE_MAGNETIC_FIELD);
-       
 
-        getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,
-                WindowManager.LayoutParams.FLAG_FULLSCREEN);
+        getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
         setContentView(R.layout.activity_main);
 
         view = (WebView) this.findViewById(R.id.webView);
@@ -76,9 +64,12 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
         });
 
         String provider = getProviderName();
+
         diffLocation = new Location(provider);
         newTeleportLocation = new Location(provider);
+
         LocationManager locationManager = (LocationManager) this.getSystemService(Context.LOCATION_SERVICE);
+
         LocationListener locationListener = new LocationListener() {
             @Override
             public void onStatusChanged(String provider, int status, Bundle extras) {
@@ -98,26 +89,26 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
                 if (oldLocation == null) {
                     oldLocation = location;
 
-                    //System.out.print("current x " + location.getLatitude());
-                    //System.out.print("current y " + location.getLatitude());
+                    System.out.print("current x " + location.getLatitude());
+                    System.out.print("current y " + location.getLatitude());
+
                     return;
                 }
                 diffLocation.setLatitude(location.getLatitude() - oldLocation.getLatitude());
                 diffLocation.setLongitude(location.getLongitude() - oldLocation.getLongitude());
 
-
                 float diff = distFrom((float)oldLocation.getLatitude(),(float) oldLocation.getLongitude(),(float)location.getLatitude(), (float)location.getLongitude() );
                 oldLocation = location;
 
                 ConvertCoordinates((double) diff);
-               // Toast.makeText(getApplicationContext(), "old: "+location.getLatitude()+" "+location.getLongitude()+" new "+newTeleportLocation.getLatitude()+","+newTeleportLocation.getLongitude()+" skirtumas: "+diff+"" ,
-                //        Toast.LENGTH_LONG).show();
+               // Toast.makeText(getApplicationContext(), "old: "+location.getLatitude()+" "+location.getLongitude()+" new "+newTeleportLocation.getLatitude()+","+newTeleportLocation.getLongitude()+" skirtumas: "+diff+"" , Toast.LENGTH_LONG).show();
             }
 
         };
-        locationManager.requestLocationUpdates(getProviderName(), 1000,
-                1, locationListener);
+
+        locationManager.requestLocationUpdates(getProviderName(), 1000,  1, locationListener);
     }
+
     public static float distFrom(float lat1, float lng1, float lat2, float lng2) {
         double earthRadius = 6371000; //meters
         double dLat = Math.toRadians(lat2-lat1);
@@ -126,9 +117,8 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
                 Math.cos(Math.toRadians(lat1)) * Math.cos(Math.toRadians(lat2)) *
                         Math.sin(dLng/2) * Math.sin(dLng/2);
         double c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a));
-        float dist = (float) (earthRadius * c);
 
-        return dist;
+        return (float) (earthRadius * c);
     }
 
     String getProviderName() {
@@ -155,8 +145,9 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
            // newTeleportLocation.setLatitude(newTeleportLocation.getLatitude() - deltaLat);
            // newTeleportLocation.setLongitude(newTeleportLocation.getLongitude() - deltaLong);
 
-           newTeleportLocation.setLatitude(newTeleportLocation.getLatitude() - diffLocation.getLatitude());
-          newTeleportLocation.setLongitude(newTeleportLocation.getLongitude() - diffLocation.getLongitude());
+            newTeleportLocation.setLatitude(newTeleportLocation.getLatitude() - diffLocation.getLatitude());
+            newTeleportLocation.setLongitude(newTeleportLocation.getLongitude() - diffLocation.getLongitude());
+
             System.out.println("Minusas:");
             System.out.println("lat: " + newTeleportLocation.getLatitude() + " lon: " + newTeleportLocation.getLongitude() + "");
 //            newTeleportLocation.setLatitude(newTeleportLocation.getLatitude() + diffLocation.getLatitude());
@@ -164,17 +155,14 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
 //            System.out.println("Pliusas:");
 //            System.out.println("lat: " + newTeleportLocation.getLatitude() + " lon: " + newTeleportLocation.getLongitude() + "");
         }
-        view.loadUrl("javascript:web.setLocation(+" + newTeleportLocation.getLatitude() + "," + newTeleportLocation.getLongitude() + ")");
 
+        view.loadUrl("javascript:web.setLocation(+" + newTeleportLocation.getLatitude() + "," + newTeleportLocation.getLongitude() + ")");
     }
 
-    Float azimut;  // View to draw a compass
-
-
     private SensorManager mSensorManager;
+
     Sensor accelerometer;
     Sensor magnetometer;
-
 
     protected void onResume() {
         super.onResume();
@@ -193,7 +181,10 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
     float[] mGeomagnetic;
     long senMagnetometerlastUpdate = 0;
     long senAccelerometerlastUpdate = 0;
-    double heading = 0;
+    double prevH = 0;
+    double heading=0;
+    double prevP = 0;
+
     public void onSensorChanged(SensorEvent event) {
         if (event.sensor.getType() == Sensor.TYPE_ACCELEROMETER)
             mGravity = event.values;
@@ -212,18 +203,17 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
 
                 heading = (Math.round(azimuthInDegress));
 
+
                 long curTime = System.currentTimeMillis();
-
-
-
-                if ((curTime - senMagnetometerlastUpdate) > 100) {
+                if (heading - prevH > 7 || heading - prevH <-7)
+                 {
                     if(WebViewOver)
+                        System.out.println(heading);
+                       prevH = heading;
                         view.loadUrl("javascript:web.setXPos("+ heading+")");
 
                     senMagnetometerlastUpdate = curTime;
                 }
-                
-
                 if (event.sensor.getType() == Sensor.TYPE_ACCELEROMETER) {
                     float mOrientation[] = new float[3];
                     System.arraycopy(event.values, 0, mGravity, 0, event.values.length);
@@ -244,8 +234,11 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
                         pitch = -pitch  + 270;
                     }
 
-                    if ((curTime - senAccelerometerlastUpdate) > 100) {
+                    if (pitch - prevP >3 || pitch - prevP <-3)
+                     {
                         if(WebViewOver) {
+                            System.out.println(pitch);
+                            prevP= pitch;
                             view.loadUrl("javascript:web.setZPos(" + pitch + ")");
                         }
                         senAccelerometerlastUpdate = curTime;
@@ -256,6 +249,4 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
         }
 
     }
-
-
 }
