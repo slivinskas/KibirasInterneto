@@ -27,7 +27,7 @@
         android:layout_height="match_parent"
         android:id="@+id/imageView"
         android:layout_alignParentStart="false"
-        android:src="@drawable/lll"
-        android:scaleType="fitXY" />
+        android:src="@drawable/llol"
+        android:scaleType="fitXY"/>
 
 </RelativeLayout>
