@@ -1,6 +1,5 @@
 package com.example.kibirasinterneto.kibirasinterneto;
 
-
 import android.app.Service;
 import android.content.Context;
 import android.content.Intent;
@@ -23,9 +22,7 @@ import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 import android.os.Bundle;
-
 import android.app.Activity;
-
 import android.hardware.Sensor;
 import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener;
@@ -34,23 +31,27 @@ import android.hardware.SensorManager;
 public class MainActivity extends AppCompatActivity implements SensorEventListener {
 
     Location oldLocation;
+
     double teleportLatitude = 40.7580441;
     double teleportLongitude =  -73.9854593;
+
     Location diffLocation;
     Location newTeleportLocation;
+
     String url = "http://kibirasinterneto.azurewebsites.net/Web/template.html";
+
     WebView view;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
         // Register the sensor listeners
         mSensorManager = (SensorManager)getSystemService(SENSOR_SERVICE);
-        accelerometer = mSensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER);
         magnetometer = mSensorManager.getDefaultSensor(Sensor.TYPE_MAGNETIC_FIELD);
-       
+        accelerometer = mSensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER);
 
-        getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,
-                WindowManager.LayoutParams.FLAG_FULLSCREEN);
+        getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
         setContentView(R.layout.activity_main);
 
         view = (WebView) this.findViewById(R.id.webView);
@@ -58,9 +59,12 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
         view.loadUrl(url);
 
         String provider = getProviderName();
+
         diffLocation = new Location(provider);
         newTeleportLocation = new Location(provider);
+
         LocationManager locationManager = (LocationManager) this.getSystemService(Context.LOCATION_SERVICE);
+
         LocationListener locationListener = new LocationListener() {
             @Override
             public void onStatusChanged(String provider, int status, Bundle extras) {
@@ -80,16 +84,15 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
                 if (oldLocation == null) {
                     oldLocation = location;
                     return;
-
                 }
                 diffLocation.setLatitude(oldLocation.getLatitude() - location.getLatitude());
                 diffLocation.setLongitude(oldLocation.getLongitude() - location.getLongitude());
                 oldLocation = location;
+
                 ConvertCoordinates();
             }
         };
-        locationManager.requestLocationUpdates(getProviderName(), 1000,
-                1, locationListener);
+        locationManager.requestLocationUpdates(getProviderName(), 1000, 1, locationListener);
     }
 
     String getProviderName() {
@@ -106,7 +109,6 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
 
     void ConvertCoordinates(){
         if(newTeleportLocation.getLatitude() == 0 && newTeleportLocation.getLongitude() ==0){
-
             newTeleportLocation.setLatitude(teleportLatitude);
             newTeleportLocation.setLongitude(teleportLongitude);
         }else {
@@ -119,11 +121,9 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
 
     Float azimut;  // View to draw a compass
 
-
     private SensorManager mSensorManager;
     Sensor accelerometer;
     Sensor magnetometer;
-
 
     protected void onResume() {
         super.onResume();
@@ -140,8 +140,10 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
 
     float[] mGravity;
     float[] mGeomagnetic;
+
     float tempAz;
     float prevAz;
+
     public void onSensorChanged(SensorEvent event) {
         if (event.sensor.getType() == Sensor.TYPE_ACCELEROMETER)
             mGravity = event.values;
@@ -167,10 +169,9 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
                     prevAz = azimut;// orientation contains: azimut, pitch and roll
                     azimut = azimut*360/(2*3.1412f);
                 }
+
                 view.loadUrl("javascript:web.setXPos("+ (double)azimut+")");
             }
         }
-
     }
-
 }
