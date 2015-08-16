@@ -57,13 +57,22 @@
 var web = {
   lat : mPos.lat,//42.345573,
   lng : mPos.lng,//-71.098326,
+  /*
+  Keičiama judesio horizantaliai pozicija
+  Parametrai: 
+    Ilguma : lat
+    Platuma: lng
+  */
   setLocation: function (lat,lng){
     web.lat = lat;
     web.lng = lng;
     panoramaLeft.setPosition({lat:web.lat, lng:web.lng});
     panoramaRight.setPosition({lat:web.lat, lng:web.lng});
   },
-
+  /*
+    Reguojama į galvos pakėlima ir nuleidimą
+    Aukštis: z
+  */
   setZPos: function(z){
     webPov.pitch = z;
     panoramaLeft.setPov(webPov);
