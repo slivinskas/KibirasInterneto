@@ -16,7 +16,8 @@
         android:layout_height="match_parent"
         android:id="@+id/imageView"
         android:layout_alignParentStart="false"
-        android:src="@drawable/loadscreen" />
+        android:src="@drawable/loaddddd"
+        android:scaleType="fitXY" />
 
     <Button
         android:layout_width="fill_parent"
