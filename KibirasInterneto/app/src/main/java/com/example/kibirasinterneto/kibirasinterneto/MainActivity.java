@@ -115,7 +115,6 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
                 }
 
 
-
                 float diff = distFrom((float)oldLocation.getLatitude(),(float) oldLocation.getLongitude(),(float)location.getLatitude(), (float)location.getLongitude() );
                 oldLocation = location;
 
@@ -157,22 +156,11 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
             newTeleportLocation.setLatitude(teleportLatitude);
             newTeleportLocation.setLongitude(teleportLongitude);
         }else {
-           //  double degLatKm = 110.574235;
-           //  double degLongKm = 110.572833;
-           //  double deltaLat = pDistanceInMeters / 1000.0 / degLatKm;
-          //  double deltaLong = pDistanceInMeters / 1000.0 / degLongKm;
-           // newTeleportLocation.setLatitude(newTeleportLocation.getLatitude() - deltaLat);
-           // newTeleportLocation.setLongitude(newTeleportLocation.getLongitude() - deltaLong);
-
-            newTeleportLocation.setLatitude((newTeleportLocation.getLatitude() + diffLocation.getLatitude())+0.00006);
-            newTeleportLocation.setLongitude((newTeleportLocation.getLongitude() + diffLocation.getLongitude())+0.00006);
+            newTeleportLocation.setLatitude((newTeleportLocation.getLatitude() + diffLocation.getLatitude())+0.00002);
+            newTeleportLocation.setLongitude((newTeleportLocation.getLongitude() + diffLocation.getLongitude())+0.00002);
 
             System.out.println("Minusas:");
             System.out.println("lat: " + newTeleportLocation.getLatitude() + " lon: " + newTeleportLocation.getLongitude() + "");
-//            newTeleportLocation.setLatitude(newTeleportLocation.getLatitude() + diffLocation.getLatitude());
-//            newTeleportLocation.setLongitude(newTeleportLocation.getLongitude() + diffLocation.getLongitude());
-//            System.out.println("Pliusas:");
-//            System.out.println("lat: " + newTeleportLocation.getLatitude() + " lon: " + newTeleportLocation.getLongitude() + "");
         }
 
         view.loadUrl("javascript:web.setLocation(+" + newTeleportLocation.getLatitude() + "," + newTeleportLocation.getLongitude() + ")");
