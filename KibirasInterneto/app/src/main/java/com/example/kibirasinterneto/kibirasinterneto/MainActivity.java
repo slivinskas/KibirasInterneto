@@ -31,6 +31,8 @@ import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener;
 import android.hardware.SensorManager;
 
+import java.util.Timer;
+
 public class MainActivity extends AppCompatActivity implements SensorEventListener {
 
     Location oldLocation;
@@ -118,7 +120,7 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
     }
 
     Float azimut;  // View to draw a compass
-
+    float heading;
 
     private SensorManager mSensorManager;
     Sensor accelerometer;
@@ -142,6 +144,7 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
     float[] mGeomagnetic;
     float tempAz;
     float prevAz;
+    long senMagnetometerlastUpdate = System.currentTimeMillis();
     public void onSensorChanged(SensorEvent event) {
         if (event.sensor.getType() == Sensor.TYPE_ACCELEROMETER)
             mGravity = event.values;
@@ -150,27 +153,65 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
         if (mGravity != null && mGeomagnetic != null) {
             float R[] = new float[9];
             float I[] = new float[9];
-            boolean success = SensorManager.getRotationMatrix(R, I, mGravity, mGeomagnetic);
+            boolean success = SensorManager.getRotationMatrix(R, null, mGravity, mGeomagnetic);
 
             if (success) {
                 float orientation[] = new float[3];
                 SensorManager.getOrientation(R, orientation);
                 if (azimut != null){
                     tempAz = orientation[0];
-                    if (tempAz - prevAz > 0.10f || tempAz - prevAz < -0.1f){
+                    if (tempAz - prevAz > 0.1f || tempAz - prevAz < -0.1f){
                         azimut = tempAz ;
                         prevAz=azimut;
                         azimut = azimut*360/(2*3.1412f);
+                        System.out.println(azimut);
                     }
-                } else {
+
+                }
+                else if (tempAz - prevAz > 0.05f || tempAz - prevAz < -0.05f){
+                    azimut = (tempAz + prevAz )/2 ;
+                    prevAz=azimut;
+                    azimut = azimut*360/(2*3.1412f);
+                    System.out.println(azimut);
+                }
+                else {
                     azimut = orientation[0];
                     prevAz = azimut;// orientation contains: azimut, pitch and roll
                     azimut = azimut*360/(2*3.1412f);
                 }
                 view.loadUrl("javascript:web.setXPos("+ (double)azimut+")");
             }
+            if (event.sensor.getType() == Sensor.TYPE_ACCELEROMETER) {
+                float mOrientation[] = new float[3];
+                System.arraycopy(event.values, 0, mGravity, 0, event.values.length);
+
+                SensorManager.getRotationMatrix(null, I, mGravity, mGeomagnetic);
+
+                SensorManager.getOrientation(R, mOrientation);
+
+                float azimuthInRadians = mOrientation[2];
+                float azimuthInDegress = (float)(Math.toDegrees(azimuthInRadians)+360)%360;
+
+                heading = (Math.round(azimuthInDegress));
+
+
+                long curTime = System.currentTimeMillis();
+
+                if ((curTime - senMagnetometerlastUpdate) > 1000) {
+
+                    // jeigu viskas OK, tai cia dedam koda kuris kazka daro
+                    System.out.println(heading);
+                    senMagnetometerlastUpdate = curTime;
+                }
+            }
         }
 
+
+
+
+
     }
+
+
 
 }
