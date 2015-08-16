@@ -22,11 +22,12 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
 
     // 38.909622,-77.034628
     // time sq 40.7580441, -73.9854593
-    //54.9019108,23.9377343
+    // kaunas 54.9019108,23.9377343
+    //parkas 40.7794498,-73.9648379
 
     Location oldLocation;
-    double teleportLatitude = 54.9019108;
-    double teleportLongitude = 23.9377343;
+    double teleportLatitude = 40.7794498;
+    double teleportLongitude = -73.9648379;
 
     Location diffLocation;
     Location newTeleportLocation;
@@ -63,6 +64,16 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
                 loadingScreen.setVisibility(View.GONE);
             }
         });
+
+        Button button = (Button) findViewById(R.id.button);
+
+        button.setOnClickListener(new View.OnClickListener() {
+            public void onClick(View v) {
+                System.out.print("asd");
+                view.loadUrl("javascript:changeAdds('android')");
+            }
+        });
+
 
         String provider = getProviderName();
 
@@ -148,8 +159,8 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
             newTeleportLocation.setLatitude(teleportLatitude);
             newTeleportLocation.setLongitude(teleportLongitude);
         }else {
-            newTeleportLocation.setLatitude((newTeleportLocation.getLatitude() + diffLocation.getLatitude())+0.00002);
-            newTeleportLocation.setLongitude((newTeleportLocation.getLongitude() + diffLocation.getLongitude())+0.00002);
+            newTeleportLocation.setLatitude((newTeleportLocation.getLatitude() + diffLocation.getLatitude())+0.00005);
+            newTeleportLocation.setLongitude((newTeleportLocation.getLongitude() + diffLocation.getLongitude())+0.00005);
 
             System.out.println("Minusas:");
             System.out.println("lat: " + newTeleportLocation.getLatitude() + " lon: " + newTeleportLocation.getLongitude() + "");

@@ -19,8 +19,8 @@
         android:layout_alignParentBottom="true"
         android:layout_alignParentEnd="true"
         android:visibility="visible"
-        android:background="#00FF0000"
-        android:onClick="onClick" />
+        android:onClick="onClick"
+        android:background="#00FF0000"/>
 
     <ImageView
         android:layout_width="match_parent"
