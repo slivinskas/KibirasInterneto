@@ -21,6 +21,7 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.view.WindowManager;
 import android.webkit.WebView;
+import android.webkit.WebViewClient;
 import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -43,7 +44,7 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
     Location newTeleportLocation;
     String url = "http://kibirasinterneto.azurewebsites.net/Web/template.html";
     WebView view;
-    Boolean onCreteOver = false;
+    Boolean WebViewOver = false;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -61,9 +62,14 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
         view.getSettings().setJavaScriptEnabled(true);
         view.loadUrl(url);
 
-        
-
-
+        view.setWebViewClient(new WebViewClient() {
+            @Override
+            public void onPageFinished(WebView view, String url) {
+                super.onPageFinished(view, url);
+                WebViewOver = true;
+                view.loadUrl("javascript:web.setXPos("+ heading+")");
+            }
+        });
 
         String provider = getProviderName();
         diffLocation = new Location(provider);
@@ -99,14 +105,13 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
                 float diff = distFrom((float)oldLocation.getLatitude(),(float) oldLocation.getLongitude(),(float)location.getLatitude(), (float)location.getLongitude() );
                 oldLocation = location;
                 ConvertCoordinates();
-                Toast.makeText(getApplicationContext(), "old: "+location.getLatitude()+" "+location.getLongitude()+" new "+newTeleportLocation.getLatitude()+","+newTeleportLocation.getLongitude()+" skirtumas: "+diff+"" ,
-                        Toast.LENGTH_LONG).show();
+                //Toast.makeText(getApplicationContext(), "old: "+location.getLatitude()+" "+location.getLongitude()+" new "+newTeleportLocation.getLatitude()+","+newTeleportLocation.getLongitude()+" skirtumas: "+diff+"" ,
+                //        Toast.LENGTH_LONG).show();
             }
 
         };
         locationManager.requestLocationUpdates(getProviderName(), 1000,
                 5, locationListener);
-        onCreteOver = true;
     }
     public static float distFrom(float lat1, float lng1, float lat2, float lng2) {
         double earthRadius = 6371000; //meters
@@ -174,7 +179,7 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
     float prevAz;
     long senMagnetometerlastUpdate = 0;
     long senAccelerometerlastUpdate = 0;
-
+    double heading=0;
     public void onSensorChanged(SensorEvent event) {
         if (event.sensor.getType() == Sensor.TYPE_ACCELEROMETER)
             mGravity = event.values;
@@ -191,13 +196,13 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
                 float azimuthInRadians = orientation[0];
                 float azimuthInDegress = (float)(Math.toDegrees(azimuthInRadians)+360)%360;
 
-                double heading = (Math.round(azimuthInDegress));
+                heading = (Math.round(azimuthInDegress));
 
                 long curTime = System.currentTimeMillis();
 
                 if ((curTime - senMagnetometerlastUpdate) > 300) {
-
-                    if(onCreteOver)
+                    System.out.println("head");
+                    if(WebViewOver)
                         view.loadUrl("javascript:web.setXPos("+ heading+")");
 
                     senMagnetometerlastUpdate = curTime;
@@ -221,9 +226,11 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
                     {
                         pitch = -pitch  + 270;
                     }
-                    
+
                     if ((curTime - senAccelerometerlastUpdate) > 300) {
-                        view.loadUrl("javascript:web.setZPos(" + pitch + ")");
+                        if(WebViewOver) {
+                            view.loadUrl("javascript:web.setZPos(" + pitch + ")");
+                        }
                         senAccelerometerlastUpdate = curTime;
                     }
                 }
@@ -232,5 +239,6 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
         }
 
     }
+
 
 }
