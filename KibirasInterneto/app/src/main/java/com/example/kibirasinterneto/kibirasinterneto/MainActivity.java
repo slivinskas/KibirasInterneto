@@ -148,8 +148,8 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
             newTeleportLocation.setLongitude(pDistanceInMeters / 1000.0 /
                     degLongKm);
 
-//            newTeleportLocation.setLatitude(newTeleportLocation.getLatitude() + diffLocation.getLatitude());
-//            newTeleportLocation.setLongitude(newTeleportLocation.getLongitude() + diffLocation.getLongitude());
+           newTeleportLocation.setLatitude(newTeleportLocation.getLatitude() + diffLocation.getLatitude());
+           newTeleportLocation.setLongitude(newTeleportLocation.getLongitude() + diffLocation.getLongitude());
         }
 
         System.out.print("different x " + diffLocation.getLatitude());
