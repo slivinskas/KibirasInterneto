@@ -88,19 +88,16 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
                 }
                 diffLocation.setLatitude(oldLocation.getLatitude() - location.getLatitude());
                 diffLocation.setLongitude(oldLocation.getLongitude() - location.getLongitude());
-                float Currentdistant = distFrom((float)oldLocation.getLatitude(), (float)oldLocation.getLongitude(), (float)location.getLatitude(),(float)location.getLongitude());
-
-                ConvertCoordinates((double)Currentdistant);
+                ConvertCoordinates();
                 oldLocation = location;
-
-                System.out.print("Distant " + Currentdistant);
-                System.out.print("current x " + location.getLatitude());
-                System.out.print("current y " + location.getLatitude());
+                float diff = distFrom((float)oldLocation.getLatitude(),(float) oldLocation.getLongitude(),(float)location.getLatitude(), (float)location.getLongitude() );
+                Toast.makeText(getApplicationContext(), "old: "+location.getLatitude()+" "+location.getLongitude()+" new "+newTeleportLocation.getLatitude()+","+newTeleportLocation.getLongitude()+" skirtumas: "+diff+"" ,
+                        Toast.LENGTH_LONG).show();
             }
 
         };
         locationManager.requestLocationUpdates(getProviderName(), 1000,
-                1, locationListener);
+                5, locationListener);
         onCreteOver = true;
     }
     public static float distFrom(float lat1, float lng1, float lat2, float lng2) {
@@ -128,7 +125,7 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
         return locationManager.getBestProvider(criteria, true);
     }
 
-    void ConvertCoordinates(double pDistanceInMeters){
+    void ConvertCoordinates(){
         if(newTeleportLocation.getLatitude() == 0 && newTeleportLocation.getLongitude() ==0){
 
             newTeleportLocation.setLatitude(teleportLatitude);
@@ -137,17 +134,11 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
 
             double degLatKm = 110.574235;
             double degLongKm = 110.572833;
-            newTeleportLocation.setLatitude(pDistanceInMeters / 1000.0 / degLatKm);
-            newTeleportLocation.setLongitude(pDistanceInMeters / 1000.0 /
-                    degLongKm);
 
-//            newTeleportLocation.setLatitude(newTeleportLocation.getLatitude() + diffLocation.getLatitude());
-//            newTeleportLocation.setLongitude(newTeleportLocation.getLongitude() + diffLocation.getLongitude());
+           newTeleportLocation.setLatitude(newTeleportLocation.getLatitude() + diffLocation.getLatitude());
+           newTeleportLocation.setLongitude(newTeleportLocation.getLongitude() + diffLocation.getLongitude());
         }
-        view.loadUrl("javascript:web.setLocation(+"+newTeleportLocation.getLatitude()+","+newTeleportLocation.getLongitude()+")");
-        System.out.print("different x "+diffLocation.getLatitude());
-        System.out.print("different y "+diffLocation.getLongitude());
-
+        view.loadUrl("javascript:web.setLocation(+" + newTeleportLocation.getLatitude() + "," + newTeleportLocation.getLongitude() + ")");
 
 
     }
