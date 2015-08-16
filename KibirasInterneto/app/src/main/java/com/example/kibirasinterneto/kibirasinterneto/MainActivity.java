@@ -132,7 +132,7 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
 
         };
 
-        locationManager.requestLocationUpdates(getProviderName(), 1000,  1, locationListener);
+        locationManager.requestLocationUpdates(getProviderName(), 1000,  3, locationListener);
 
     }
 
