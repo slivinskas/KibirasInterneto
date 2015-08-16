@@ -59,7 +59,9 @@
   panoramaLeft.setVisible(true);
   panoramaRight.setVisible(true);
 }
-
+function isInArray(value, array) {
+    return array.indexOf(value) > -1;
+  }
 var web = {
   lat : mPos.lat,//42.345573,
   lng : mPos.lng,//-71.098326,
@@ -105,9 +107,17 @@ var web = {
       rootName = "photo";
     }*/
     adsList = Array("ad","photo","android","cardboard","coding");
-    for (var i = markers.length - 1; i >= 0; i--) {
-      markers[i].setIcon(markerIcon+x+i+'.png');
-      markers2[i].setIcon(markerIcon+x+i+'.png');
+    if(isInArray(x,adsList)){
+      for (var i = markers.length - 1; i >= 0; i--) {
+        markers [i].setIcon(markerIcon+x+i+'.png');
+        markers2[i].setIcon(markerIcon+x+i+'.png');
+      }
+    }else{
+      for (var i = markers.length - 1; i >= 0; i--) {
+        markers [i].setIcon(markerIcon+'empty.png');
+        markers2[i].setIcon(markerIcon+'empty.png');
+      }
     }
   }
+  
 }
