@@ -9,42 +9,47 @@
     addressControl:false
   };
   var mPos = {lat : 40.757981, lng : -73.985580};
+
   var webPov = {
         heading: 34,
         pitch: 10,
         zoom: 1
       };
 
-  var markerIcon = 'http://icons.iconarchive.com/icons/yellowicon/game-stars/256/Mario-icon.png';
-
+  //var markerIcon = 'http://unconference.adform.com/img/unconference/adform-logo.png';
+  var markerIcon = '/icons/ad';
+  
   var map1, map2;
-  var marker1,marker2;
+  var markers = new Array(5);
+  var markers2 = new Array(5);
+   var xx  = 0.000300;
+   var xx2 = 0.000300;
 
   function initPano() {
-  
-    map1 = new google.maps.Map(document.getElementById('map1'), mapSetings);
-    map2 = new google.maps.Map(document.getElementById('map2'), mapSetings);
-    marker1 = new google.maps.Marker({
-       position: mPos,
-       icon: markerIcon,
-       title: 'Cafe'
-    });
-    marker2 = new google.maps.Marker({
-       position: mPos,
-       icon: markerIcon,
-       title: 'Cafe'
-    });
-    marker1.setMap(map1);
-    marker2.setMap(map2);
-    panoramaLeft = map1.getStreetView();
-    panoramaRight = map2.getStreetView();
+    function makeMaker(mainUrl,nr,type,posLat,posLng,map){
+      return new google.maps.Marker({
+              position: {lat : posLat, lng : posLng},
+              icon: mainUrl+nr+"."+type,
+              title: 'Cafe',
+              map: map
+            });
+      }
+  map1 = new google.maps.Map(document.getElementById('map1'), mapSetings);
+  map2 = new google.maps.Map(document.getElementById('map2'), mapSetings);
+  for (var i = markers.length - 1; i >= 0; i--) {
+    markers[i]  = makeMaker(markerIcon,i,"png",mPos.lat+xx,mPos.lng+xx2,map1);
+    markers2[i] = makeMaker(markerIcon,i,"png",mPos.lat+xx,mPos.lng+xx2,map2);
+  };
 
-    panoramaLeft.setPosition(mPos);
-    panoramaRight.setPosition(mPos);
-    panoramaLeft.setPov((webPov));
-    panoramaRight.setPov((webPov));
-    panoramaLeft.setVisible(true);
-    panoramaRight.setVisible(true);
+  panoramaLeft  = map1.getStreetView();
+  panoramaRight = map2.getStreetView();
+
+  panoramaLeft.setPosition(mPos);
+  panoramaRight.setPosition(mPos);
+  panoramaLeft.setPov((webPov));
+  panoramaRight.setPov((webPov));
+  panoramaLeft.setVisible(true);
+  panoramaRight.setVisible(true);
 }
 
 var web = {
@@ -67,5 +72,17 @@ var web = {
     webPov.heading = x;
     panoramaLeft.setPov(webPov);
     panoramaRight.setPov(webPov);
+  },
+  changeAds :function(x){
+    var rootName;
+    if(x == true){
+      rootName = "ad";
+    }else{
+      rootName = "photo";
+    }
+    for (var i = markers.length - 1; i >= 0; i--) {
+      marker[i].setIcon(markerIcon+"/"+rootName+i+'.png');
+      marker2[i].setIcon(markerIcon+"/"+rootName+i+'.png');
+    }
   }
 }
