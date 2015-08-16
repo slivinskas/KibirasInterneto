@@ -3,7 +3,6 @@
     android:layout_height="match_parent"
      tools:context=".MainActivity">
 
-
     <WebView
         android:layout_width="fill_parent"
         android:layout_height="fill_parent"
@@ -28,6 +27,5 @@
         android:layout_alignParentBottom="true"
         android:layout_alignParentEnd="true"
         android:visibility="invisible" />
-
-
+    
 </RelativeLayout>
