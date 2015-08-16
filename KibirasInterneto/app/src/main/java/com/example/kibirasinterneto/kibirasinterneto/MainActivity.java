@@ -94,8 +94,18 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
 
                     return;
                 }
-                diffLocation.setLatitude(location.getLatitude() - oldLocation.getLatitude());
-                diffLocation.setLongitude(location.getLongitude() - oldLocation.getLongitude());
+                if(oldLocation.getLatitude() > location.getLatitude()){
+                    diffLocation.setLatitude(location.getLatitude() - oldLocation.getLatitude());
+                }else{
+                    diffLocation.setLatitude(oldLocation.getLatitude() -location.getLatitude());
+                }
+                if(oldLocation.getLongitude() > location.getLongitude()){
+                    diffLocation.setLongitude(location.getLongitude() - oldLocation.getLongitude());
+                }else{
+                    diffLocation.setLongitude( oldLocation.getLongitude()-location.getLongitude());
+                }
+
+
 
                 float diff = distFrom((float)oldLocation.getLatitude(),(float) oldLocation.getLongitude(),(float)location.getLatitude(), (float)location.getLongitude() );
                 oldLocation = location;
@@ -145,8 +155,8 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
            // newTeleportLocation.setLatitude(newTeleportLocation.getLatitude() - deltaLat);
            // newTeleportLocation.setLongitude(newTeleportLocation.getLongitude() - deltaLong);
 
-            newTeleportLocation.setLatitude(newTeleportLocation.getLatitude() - diffLocation.getLatitude());
-            newTeleportLocation.setLongitude(newTeleportLocation.getLongitude() - diffLocation.getLongitude());
+            newTeleportLocation.setLatitude(newTeleportLocation.getLatitude() + diffLocation.getLatitude());
+            newTeleportLocation.setLongitude(newTeleportLocation.getLongitude() + diffLocation.getLongitude());
 
             System.out.println("Minusas:");
             System.out.println("lat: " + newTeleportLocation.getLatitude() + " lon: " + newTeleportLocation.getLongitude() + "");
