@@ -38,8 +38,8 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
     // time sq 40.7580441, -73.9854593
     //54.9019108,23.9377343
     Location oldLocation;
-    double teleportLatitude = 40.7580441;
-    double teleportLongitude = -73.9854593;
+    double teleportLatitude = 54.9019108;
+    double teleportLongitude = 23.9377343;
     Location diffLocation;
     Location newTeleportLocation;
     String url = "http://kibirasinterneto.azurewebsites.net/Web/template.html";
@@ -66,9 +66,17 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
             public void onPageFinished(WebView view, String url) {
                 super.onPageFinished(view, url);
                 view.loadUrl("javascript:web.setXPos(" + heading + ")");
-                WebViewOver = true;
                 ImageView loadingScreen = (ImageView) findViewById(R.id.imageView);
                 loadingScreen.setVisibility(View.GONE);
+                WebViewOver = true;
+            }
+        });
+        Button button = (Button) findViewById(R.id.button);
+
+        button.setOnClickListener(new View.OnClickListener() {
+            public void onClick(View v) {
+
+                view.loadUrl("javascript:changeAdds('photo')");
             }
         });
         String provider = getProviderName();
@@ -98,22 +106,29 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
                     System.out.print("current y " + location.getLatitude());
                     return;
                 }
-                diffLocation.setLatitude(location.getLatitude() - oldLocation.getLatitude());
-                diffLocation.setLongitude(location.getLongitude() - oldLocation.getLongitude());
+                if(oldLocation.getLatitude() > location.getLatitude()){
+                    diffLocation.setLatitude( location.getLatitude() - oldLocation.getLatitude());
+                }else{
+                    diffLocation.setLatitude(oldLocation.getLatitude() - location.getLatitude());
+                }
+                if(oldLocation.getLongitude() < location.getLongitude()){
+                    diffLocation.setLongitude(oldLocation.getLongitude() - location.getLongitude());
+                }else{
+                    diffLocation.setLongitude(location.getLongitude() - oldLocation.getLongitude());
+                }
 
-
-                float diff = distFrom((float)oldLocation.getLatitude(),(float) oldLocation.getLongitude(),(float)location.getLatitude(), (float)location.getLongitude() );
                 oldLocation = location;
 
-                ConvertCoordinates((double) diff);
-               // Toast.makeText(getApplicationContext(), "old: "+location.getLatitude()+" "+location.getLongitude()+" new "+newTeleportLocation.getLatitude()+","+newTeleportLocation.getLongitude()+" skirtumas: "+diff+"" ,
-                //        Toast.LENGTH_LONG).show();
+                ConvertCoordinates();
+//               Toast.makeText(getApplicationContext(), "old: "+Math.round(((oldLocation.getLatitude() - location.getLatitude()) * 100) / 100 )+" x "+Math.round(((oldLocation.getLongitude() - location.getLongitude()) * 100) / 100 )+"" ,
+//                       Toast.LENGTH_LONG).show();
             }
 
         };
         locationManager.requestLocationUpdates(getProviderName(), 1000,
                 1, locationListener);
     }
+
     public static float distFrom(float lat1, float lng1, float lat2, float lng2) {
         double earthRadius = 6371000; //meters
         double dLat = Math.toRadians(lat2-lat1);
@@ -139,29 +154,20 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
         return locationManager.getBestProvider(criteria, true);
     }
 
-    void ConvertCoordinates(double pDistanceInMeters){
+    void ConvertCoordinates(){
         if(newTeleportLocation.getLatitude() == 0 && newTeleportLocation.getLongitude() ==0){
             newTeleportLocation.setLatitude(teleportLatitude);
             newTeleportLocation.setLongitude(teleportLongitude);
         }else {
-           //  double degLatKm = 110.574235;
-           //  double degLongKm = 110.572833;
-           //  double deltaLat = pDistanceInMeters / 1000.0 / degLatKm;
-          //  double deltaLong = pDistanceInMeters / 1000.0 / degLongKm;
-           // newTeleportLocation.setLatitude(newTeleportLocation.getLatitude() - deltaLat);
-           // newTeleportLocation.setLongitude(newTeleportLocation.getLongitude() - deltaLong);
-
-           newTeleportLocation.setLatitude(newTeleportLocation.getLatitude() - diffLocation.getLatitude());
-          newTeleportLocation.setLongitude(newTeleportLocation.getLongitude() - diffLocation.getLongitude());
-            System.out.println("Minusas:");
-            System.out.println("lat: " + newTeleportLocation.getLatitude() + " lon: " + newTeleportLocation.getLongitude() + "");
-//            newTeleportLocation.setLatitude(newTeleportLocation.getLatitude() + diffLocation.getLatitude());
-//            newTeleportLocation.setLongitude(newTeleportLocation.getLongitude() + diffLocation.getLongitude());
-//            System.out.println("Pliusas:");
-//            System.out.println("lat: " + newTeleportLocation.getLatitude() + " lon: " + newTeleportLocation.getLongitude() + "");
+            newTeleportLocation.setLatitude((newTeleportLocation.getLatitude() + diffLocation.getLatitude())+0.00005);
+          newTeleportLocation.setLongitude((newTeleportLocation.getLongitude() + diffLocation.getLongitude())+0.00005);
+            Toast.makeText(getApplicationContext(), "old: " + diffLocation.getLatitude() + ""+ diffLocation.getLongitude()+"",
+                      Toast.LENGTH_LONG).show();
+                    System.out.println("lat: " + newTeleportLocation.getLatitude() + " lon: " + newTeleportLocation.getLongitude() + "");
         }
-        view.loadUrl("javascript:web.setLocation(+" + newTeleportLocation.getLatitude() + "," + newTeleportLocation.getLongitude() + ")");
 
+        view.loadUrl("javascript:web.setLocation(+" + newTeleportLocation.getLatitude() + "," + newTeleportLocation.getLongitude() + ")");
+       // view.loadUrl("javascript:web.setXPos("+ heading+")");
     }
 
     Float azimut;  // View to draw a compass
@@ -212,7 +218,7 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
 
                 long curTime = System.currentTimeMillis();
 
-                if ((curTime - senMagnetometerlastUpdate) > 300) {
+                if ((curTime - senMagnetometerlastUpdate) > 500) {
                     if(WebViewOver)
                         view.loadUrl("javascript:web.setXPos("+ heading+")");
 
@@ -238,7 +244,7 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
                         pitch = -pitch  + 270;
                     }
 
-                    if ((curTime - senAccelerometerlastUpdate) > 300) {
+                    if ((curTime - senAccelerometerlastUpdate) > 500) {
                         if(WebViewOver) {
                             view.loadUrl("javascript:web.setZPos(" + pitch + ")");
                         }
