@@ -59,7 +59,9 @@
   panoramaLeft.setVisible(true);
   panoramaRight.setVisible(true);
 }
-
+function isInArray(value, array) {
+    return array.indexOf(value) > -1;
+  }
 var web = {
   lat : mPos.lat,//42.345573,
   lng : mPos.lng,//-71.098326,
@@ -110,7 +112,5 @@ var web = {
       markers2[i].setIcon(markerIcon+x+i+'.png');
     }
   }
-  function isInArray(value, array) {
-    return array.indexOf(value) > -1;
-  }
+  
 }
