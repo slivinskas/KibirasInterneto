@@ -1,3 +1,4 @@
+  
   var panoramaLeft;
   var panoramaRight;
   var outsideGoogle;
@@ -22,8 +23,8 @@
   var map1, map2;
   var markers = new Array(5);
   var markers2 = new Array(5);
-  var xx  = 0.000600;
-  var xx2 = 0.000600;
+  var xx  = 0.000200;
+  var xx2 = 0.000500;
 
   function makeMaker(mainUrl,nr,type,posLat,posLng,map){
     return new google.maps.Marker({
@@ -35,12 +36,17 @@
   }
 
   function initPano() {
-    
+    var toSide;
   map1 = new google.maps.Map(document.getElementById('map1'), mapSetings);
   map2 = new google.maps.Map(document.getElementById('map2'), mapSetings);
   for (var i = markers.length - 1; i >= 0; i--) {
-    markers[i]  = makeMaker(markerIcon+"ad",i,"png",mPos.lat+xx,mPos.lng+xx2,map1);
-    markers2[i] = makeMaker(markerIcon+"ad",i,"png",mPos.lat+xx,mPos.lng+xx2,map2);
+    if(i%2==0){
+       toSide = mPos.lng+xx2*i; 
+    }else{
+        toSide = mPos.lng-xx2*i;
+    }
+    markers[i]  = makeMaker(markerIcon+"ad",i,"png",mPos.lat+xx,toSide,map1);
+    markers2[i] = makeMaker(markerIcon+"ad",i,"png",mPos.lat+xx,toSide,map2);
   };
 
   panoramaLeft  = map1.getStreetView();
@@ -78,12 +84,19 @@ var web = {
     panoramaLeft.setPov(webPov);
     panoramaRight.setPov(webPov);
   },
-
+  /*
+    Pakeičia pasisukimą 
+    Pasisukimas: x
+  */
   setXPos : function(x){
     webPov.heading = x;
     panoramaLeft.setPov(webPov);
     panoramaRight.setPov(webPov);
   },
+  /*
+  Pakeičia reklamas 
+  Raklamų grupės antraštės pavadinimas : x
+  */
   changeAds :function(x){
     /*var rootName;
     if(x == true){
