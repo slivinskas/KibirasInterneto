@@ -217,12 +217,12 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
                 long curTime = System.currentTimeMillis();
                 if (heading - prevH > 7 || heading - prevH <-7)
                  {
-                    if(WebViewOver)
+                    if(WebViewOver) 
                         System.out.println(heading);
-                       prevH = heading;
+                        prevH = heading;
                         view.loadUrl("javascript:web.setXPos("+ heading+")");
 
-                    senMagnetometerlastUpdate = curTime;
+                     senMagnetometerlastUpdate = curTime;
                 }
                 if (event.sensor.getType() == Sensor.TYPE_ACCELEROMETER) {
                     float mOrientation[] = new float[3];
