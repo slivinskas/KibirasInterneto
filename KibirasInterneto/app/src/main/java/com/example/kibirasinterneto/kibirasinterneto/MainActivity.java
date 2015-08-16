@@ -67,7 +67,6 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
 
         button.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
-
                 view.loadUrl("javascript:changeAdds('photo')");
             }
         });
