@@ -113,8 +113,10 @@ var web = {
         markers2[i].setIcon(markerIcon+x+i+'.png');
       }
     }else{
-      markers [i].setIcon(markerIcon+'empty.png');
-      markers2[i].setIcon(markerIcon+'empty.png');
+      for (var i = markers.length - 1; i >= 0; i--) {
+        markers [i].setIcon(markerIcon+'empty.png');
+        markers2[i].setIcon(markerIcon+'empty.png');
+    }
     }
   }
   
