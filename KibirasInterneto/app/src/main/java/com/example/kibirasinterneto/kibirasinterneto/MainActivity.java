@@ -216,7 +216,7 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
 
 
 
-                if ((curTime - senMagnetometerlastUpdate) > 300) {
+                if ((curTime - senMagnetometerlastUpdate) > 100) {
                     if(WebViewOver)
                         view.loadUrl("javascript:web.setXPos("+ heading+")");
 
@@ -244,7 +244,7 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
                         pitch = -pitch  + 270;
                     }
 
-                    if ((curTime - senAccelerometerlastUpdate) > 300) {
+                    if ((curTime - senAccelerometerlastUpdate) > 100) {
                         if(WebViewOver) {
                             view.loadUrl("javascript:web.setZPos(" + pitch + ")");
                         }
