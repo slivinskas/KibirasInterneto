@@ -191,12 +191,9 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
 
     float[] mGravity;
     float[] mGeomagnetic;
-    float tempAz;
-    float prevAz;
     long senMagnetometerlastUpdate = 0;
     long senAccelerometerlastUpdate = 0;
     double heading = 0;
-    double prevHead = 0;
     public void onSensorChanged(SensorEvent event) {
         if (event.sensor.getType() == Sensor.TYPE_ACCELEROMETER)
             mGravity = event.values;
@@ -221,7 +218,6 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
 
                 if ((curTime - senMagnetometerlastUpdate) > 300) {
                     if(WebViewOver)
-                        System.out.println(heading);
                         view.loadUrl("javascript:web.setXPos("+ heading+")");
 
                     senMagnetometerlastUpdate = curTime;
