@@ -88,19 +88,18 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
                 }
                 diffLocation.setLatitude(oldLocation.getLatitude() - location.getLatitude());
                 diffLocation.setLongitude(oldLocation.getLongitude() - location.getLongitude());
-                float Currentdistant = distFrom((float)oldLocation.getLatitude(), (float)oldLocation.getLongitude(), (float)location.getLatitude(),(float)location.getLongitude());
 
-                ConvertCoordinates((double)Currentdistant);
+
+                float diff = distFrom((float)oldLocation.getLatitude(),(float) oldLocation.getLongitude(),(float)location.getLatitude(), (float)location.getLongitude() );
                 oldLocation = location;
-
-                System.out.print("Distant " + Currentdistant);
-                System.out.print("current x " + location.getLatitude());
-                System.out.print("current y " + location.getLatitude());
+                ConvertCoordinates();
+                Toast.makeText(getApplicationContext(), "old: "+location.getLatitude()+" "+location.getLongitude()+" new "+newTeleportLocation.getLatitude()+","+newTeleportLocation.getLongitude()+" skirtumas: "+diff+"" ,
+                        Toast.LENGTH_LONG).show();
             }
 
         };
         locationManager.requestLocationUpdates(getProviderName(), 1000,
-                1, locationListener);
+                5, locationListener);
         onCreteOver = true;
     }
     public static float distFrom(float lat1, float lng1, float lat2, float lng2) {
@@ -128,27 +127,17 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
         return locationManager.getBestProvider(criteria, true);
     }
 
-    void ConvertCoordinates(double pDistanceInMeters){
+    void ConvertCoordinates(){
         if(newTeleportLocation.getLatitude() == 0 && newTeleportLocation.getLongitude() ==0){
 
             newTeleportLocation.setLatitude(teleportLatitude);
             newTeleportLocation.setLongitude(teleportLongitude);
         }else {
 
-            double degLatKm = 110.574235;
-            double degLongKm = 110.572833;
-            newTeleportLocation.setLatitude(pDistanceInMeters / 1000.0 / degLatKm);
-            newTeleportLocation.setLongitude(pDistanceInMeters / 1000.0 /
-                    degLongKm);
-
-//            newTeleportLocation.setLatitude(newTeleportLocation.getLatitude() + diffLocation.getLatitude());
-//            newTeleportLocation.setLongitude(newTeleportLocation.getLongitude() + diffLocation.getLongitude());
+           newTeleportLocation.setLatitude(newTeleportLocation.getLatitude() + diffLocation.getLatitude());
+           newTeleportLocation.setLongitude(newTeleportLocation.getLongitude() + diffLocation.getLongitude());
         }
-        view.loadUrl("javascript:web.setLocation(+"+newTeleportLocation.getLatitude()+","+newTeleportLocation.getLongitude()+")");
-        System.out.print("different x "+diffLocation.getLatitude());
-        System.out.print("different y "+diffLocation.getLongitude());
-
-
+        view.loadUrl("javascript:web.setLocation(+" + newTeleportLocation.getLatitude() + "," + newTeleportLocation.getLongitude() + ")");
 
     }
 
@@ -178,6 +167,8 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
     float tempAz;
     float prevAz;
     long senMagnetometerlastUpdate = 0;
+    long senAccelerometerlastUpdate = 0;
+
     public void onSensorChanged(SensorEvent event) {
         if (event.sensor.getType() == Sensor.TYPE_ACCELEROMETER)
             mGravity = event.values;
@@ -205,8 +196,33 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
 
                     senMagnetometerlastUpdate = curTime;
                 }
+                if (event.sensor.getType() == Sensor.TYPE_ACCELEROMETER) {
+                    float mOrientation[] = new float[3];
+                    System.arraycopy(event.values, 0, mGravity, 0, event.values.length);
 
+                    SensorManager.getRotationMatrix(null, I, mGravity, mGeomagnetic);
+
+                    SensorManager.getOrientation(R, mOrientation);
+
+                    float pitchInRadians = mOrientation[2];
+                    float pitchInDegress = (float) (Math.toDegrees(pitchInRadians) + 360) % 360;
+
+                    double pitch = (Math.round(pitchInDegress));
+
+                    if (pitch < 180){
+                        pitch = pitch  - 90;
+                    } else
+                    {
+                        pitch = -pitch  + 270;
+                    }
+                    
+                    if ((curTime - senAccelerometerlastUpdate) > 300) {
+                        view.loadUrl("javascript:web.setZPos(" + pitch + ")");
+                        senAccelerometerlastUpdate = curTime;
+                    }
+                }
             }
+
         }
 
     }
