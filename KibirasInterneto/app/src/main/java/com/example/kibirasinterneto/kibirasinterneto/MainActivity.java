@@ -249,7 +249,7 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
                     if ((curTime - senAccelerometerlastUpdate) > 300) {
 
                         // jeigu viskas OK, tai cia dedam koda kuris kazka daro
-                        System.out.println(pitch);
+                        
                         view.loadUrl("javascript:web.setZPos(" + pitch + ")");
                         senAccelerometerlastUpdate = curTime;
                     }
