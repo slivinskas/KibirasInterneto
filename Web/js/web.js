@@ -78,12 +78,19 @@ var web = {
     panoramaLeft.setPov(webPov);
     panoramaRight.setPov(webPov);
   },
-
+  /*
+    Pakeičia pasisukimą 
+    Pasisukimas: x
+  */
   setXPos : function(x){
     webPov.heading = x;
     panoramaLeft.setPov(webPov);
     panoramaRight.setPov(webPov);
   },
+  /*
+  Pakeičia reklamas 
+  Raklamų grupės antraštės pavadinimas : x
+  */
   changeAds :function(x){
     /*var rootName;
     if(x == true){
