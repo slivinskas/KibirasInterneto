@@ -211,7 +211,7 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
 
                 long curTime = System.currentTimeMillis();
 
-                
+
 
                 if ((curTime - senMagnetometerlastUpdate) > 300) {
                     if(WebViewOver)
