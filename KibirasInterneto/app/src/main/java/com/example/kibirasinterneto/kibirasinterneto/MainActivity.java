@@ -63,13 +63,6 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
                 loadingScreen.setVisibility(View.GONE);
             }
         });
-        Button button = (Button) findViewById(R.id.button);
-
-        button.setOnClickListener(new View.OnClickListener() {
-            public void onClick(View v) {
-                view.loadUrl("javascript:changeAdds('photo')");
-            }
-        });
 
         String provider = getProviderName();
 
@@ -179,6 +172,10 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
     protected void onPause() {
         super.onPause();
         mSensorManager.unregisterListener(this);
+    }
+
+    public void onClick(View v) {
+        view.loadUrl("javascript:changeAdds('photo')");
     }
 
     public void onAccuracyChanged(Sensor sensor, int accuracy) {  }
