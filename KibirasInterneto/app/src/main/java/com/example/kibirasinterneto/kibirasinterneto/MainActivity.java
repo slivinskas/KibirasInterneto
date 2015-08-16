@@ -95,11 +95,10 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
 
                 ConvertCoordinates((double) Currentdistant);
                 oldLocation = location;
-<<<<<<< HEAD
-                view.loadUrl("javascript:web.setLocation(+" + newTeleportLocation.getLatitude() + "," + newTeleportLocation.getLongitude() + ")");
-=======
 
->>>>>>> 381d5bcd415f75ec7824a962073df7049740b10c
+                view.loadUrl("javascript:web.setLocation(+" + newTeleportLocation.getLatitude() + "," + newTeleportLocation.getLongitude() + ")");
+
+
                 System.out.print("Distant " + Currentdistant);
                 System.out.print("current x " + location.getLatitude());
                 System.out.print("current y " + location.getLatitude());
@@ -152,15 +151,13 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
 //            newTeleportLocation.setLatitude(newTeleportLocation.getLatitude() + diffLocation.getLatitude());
 //            newTeleportLocation.setLongitude(newTeleportLocation.getLongitude() + diffLocation.getLongitude());
         }
-<<<<<<< HEAD
+
         System.out.print("different x " + diffLocation.getLatitude());
         System.out.print("different y " + diffLocation.getLongitude());
-=======
-        view.loadUrl("javascript:web.setLocation(+"+newTeleportLocation.getLatitude()+","+newTeleportLocation.getLongitude()+")");
-        System.out.print("different x "+diffLocation.getLatitude());
-        System.out.print("different y "+diffLocation.getLongitude());
 
->>>>>>> 381d5bcd415f75ec7824a962073df7049740b10c
+        view.loadUrl("javascript:web.setLocation(+" + newTeleportLocation.getLatitude() + "," + newTeleportLocation.getLongitude() + ")");
+        System.out.print("different x " + diffLocation.getLatitude());
+        System.out.print("different y " + diffLocation.getLongitude());
 
 
     }
@@ -189,11 +186,10 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
 
     float[] mGravity;
     float[] mGeomagnetic;
-    float tempAz;
-    float prevAz;
 
 
     long senMagnetometerlastUpdate = 0;
+    long senAccelerometerlastUpdate = 0;
 
     public void onSensorChanged(SensorEvent event) {
         if (event.sensor.getType() == Sensor.TYPE_ACCELEROMETER)
@@ -209,42 +205,24 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
                 float orientation[] = new float[6];
                 SensorManager.getOrientation(R, orientation);
 
-                if (azimut != null) {
-                    tempAz = orientation[0];
-                    if (tempAz - prevAz > 0.1f || tempAz - prevAz < -0.1f) {
-                        azimut = tempAz;
-                        prevAz = azimut;
-                        azimut = azimut * 360 / (2 * 3.1412f);
-                        System.out.println(azimut);
-                    }
 
-                } else if (tempAz - prevAz > 0.05f || tempAz - prevAz < -0.05f) {
-                    azimut = (tempAz + prevAz) / 2;
-                    prevAz = azimut;
-                    azimut = azimut * 360 / (2 * 3.1412f);
-                    System.out.println(azimut);
-                } else {
-                    azimut = orientation[0];
-                    prevAz = azimut;// orientation contains: azimut, pitch and roll
-                    azimut = azimut * 360 / (2 * 3.1412f);
+                float azimuthInRadians = orientation[0];
+                float azimuthInDegress = (float) (Math.toDegrees(azimuthInRadians) + 360) % 360;
 
-                    float azimuthInRadians = orientation[0];
-                    float azimuthInDegress = (float) (Math.toDegrees(azimuthInRadians) + 360) % 360;
+                double heading = (Math.round(azimuthInDegress));
 
-                    double heading = (Math.round(azimuthInDegress));
+                long curTime = System.currentTimeMillis();
 
-                    long curTime = System.currentTimeMillis();
+                if ((curTime - senMagnetometerlastUpdate) > 300) {
 
-                    if ((curTime - senMagnetometerlastUpdate) > 300) {
+                    if (onCreteOver)
+                        view.loadUrl("javascript:web.setXPos(" + heading + ")");
 
-                        if (onCreteOver)
-                            view.loadUrl("javascript:web.setXPos(" + heading + ")");
-
-                        senMagnetometerlastUpdate = curTime;
-
-                    }
+                    senMagnetometerlastUpdate = curTime;
 
                 }
+
+
                 if (event.sensor.getType() == Sensor.TYPE_ACCELEROMETER) {
                     float mOrientation[] = new float[3];
                     System.arraycopy(event.values, 0, mGravity, 0, event.values.length);
@@ -253,19 +231,27 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
 
                     SensorManager.getOrientation(R, mOrientation);
 
-                    float azimuthInRadians = mOrientation[2];
-                    float azimuthInDegress = (float) (Math.toDegrees(azimuthInRadians) + 360) % 360;
+                    float pitchInRadians = mOrientation[2];
+                    float pitchInDegress = (float) (Math.toDegrees(pitchInRadians) + 360) % 360;
 
-                    heading = (Math.round(azimuthInDegress));
+                    double pitch = (Math.round(pitchInDegress));
+
+                    if (pitch < 180){
+                        pitch = pitch  - 90;
+                    } else
+                    {
+                        pitch = -pitch  + 270;
+                    }
 
 
-                    long curTime = System.currentTimeMillis();
 
-                    if ((curTime - senMagnetometerlastUpdate) > 1000) {
+
+                    if ((curTime - senAccelerometerlastUpdate) > 300) {
 
                         // jeigu viskas OK, tai cia dedam koda kuris kazka daro
-                        System.out.println(heading);
-                        senMagnetometerlastUpdate = curTime;
+                        System.out.println(pitch);
+                        view.loadUrl("javascript:web.setZPos(" + pitch + ")");
+                        senAccelerometerlastUpdate = curTime;
                     }
                 }
             }
@@ -275,4 +261,5 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
 
 
     }
+
 }
