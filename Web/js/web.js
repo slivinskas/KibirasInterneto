@@ -15,36 +15,36 @@
         zoom: 1
       };
 
-  var markerIcon = 'http://unconference.adform.com/img/unconference/adform-logo.png';
+  var markerIcon = 'http://icons.iconarchive.com/icons/yellowicon/game-stars/256/Mario-icon.png';
 
   var map1, map2;
   var marker1,marker2;
 
   function initPano() {
+  
+    map1 = new google.maps.Map(document.getElementById('map1'), mapSetings);
+    map2 = new google.maps.Map(document.getElementById('map2'), mapSetings);
+    marker1 = new google.maps.Marker({
+       position: mPos,
+       icon: markerIcon,
+       title: 'Cafe'
+    });
+    marker2 = new google.maps.Marker({
+       position: mPos,
+       icon: markerIcon,
+       title: 'Cafe'
+    });
+    marker1.setMap(map1);
+    marker2.setMap(map2);
+    panoramaLeft = map1.getStreetView();
+    panoramaRight = map2.getStreetView();
 
-  map1 = new google.maps.Map(document.getElementById('map1'), mapSetings);
-  map2 = new google.maps.Map(document.getElementById('map2'), mapSetings);
-  marker1 = new google.maps.Marker({
-     position: mPos,
-     icon: markerIcon,
-     title: 'Cafe'
-  });
-  marker2 = new google.maps.Marker({
-     position: mPos,
-     icon: markerIcon,
-     title: 'Cafe'
-  });
-  marker1.setMap(map1);
-  marker2.setMap(map2);
-  panoramaLeft = map1.getStreetView();
-  panoramaRight = map2.getStreetView();
-
-  panoramaLeft.setPosition(mPos);
-  panoramaRight.setPosition(mPos);
-  panoramaLeft.setPov((webPov));
-  panoramaRight.setPov((webPov));
-  panoramaLeft.setVisible(true);
-  panoramaRight.setVisible(true);
+    panoramaLeft.setPosition(mPos);
+    panoramaRight.setPosition(mPos);
+    panoramaLeft.setPov((webPov));
+    panoramaRight.setPov((webPov));
+    panoramaLeft.setVisible(true);
+    panoramaRight.setVisible(true);
 }
 
 var web = {
