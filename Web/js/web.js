@@ -104,9 +104,13 @@ var web = {
     }else{
       rootName = "photo";
     }*/
+    adsList = Array("ad","photo","android","cardboard","coding");
     for (var i = markers.length - 1; i >= 0; i--) {
       markers[i].setIcon(markerIcon+x+i+'.png');
       markers2[i].setIcon(markerIcon+x+i+'.png');
     }
+  }
+  function isInArray(value, array) {
+    return array.indexOf(value) > -1;
   }
 }
