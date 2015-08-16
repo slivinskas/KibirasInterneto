@@ -24,10 +24,11 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
     // time sq 40.7580441, -73.9854593
     // kaunas 54.9019108,23.9377343
     //parkas 40.7794498,-73.9648379
+    // hellsinikis 60.1704841,  24.9415158
 
     Location oldLocation;
-    double teleportLatitude = 40.7794498;
-    double teleportLongitude = -73.9648379;
+    double teleportLatitude = 60.1704841;
+    double teleportLongitude = 24.9415158;
 
     Location diffLocation;
     Location newTeleportLocation;
@@ -37,6 +38,8 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
     WebView view;
 
     Boolean WebViewOver = false;
+    String[] ImageArray = {"android","cardboard", "ad", "empty"};
+    int count = 0;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -69,8 +72,13 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
 
         button.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
-                System.out.print("asd");
-                view.loadUrl("javascript:changeAdds('android')");
+                if(ImageArray.length > count) {
+                    view.loadUrl("javascript:web.changeAds('"+ImageArray[count]+"')");
+                    count++;
+                }else{
+                    count = 0;
+                    view.loadUrl("javascript:web.changeAds('"+ImageArray[count]+"')");
+                }
             }
         });
 
@@ -101,9 +109,6 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
                 if (oldLocation == null) {
                     oldLocation = location;
 
-                    System.out.print("current x " + location.getLatitude());
-                    System.out.print("current y " + location.getLatitude());
-
                     return;
                 }
                 if(oldLocation.getLatitude() > location.getLatitude()){
@@ -128,6 +133,7 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
         };
 
         locationManager.requestLocationUpdates(getProviderName(), 1000,  1, locationListener);
+
     }
 
     public static float distFrom(float lat1, float lng1, float lat2, float lng2) {
@@ -159,11 +165,9 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
             newTeleportLocation.setLatitude(teleportLatitude);
             newTeleportLocation.setLongitude(teleportLongitude);
         }else {
-            newTeleportLocation.setLatitude((newTeleportLocation.getLatitude() + diffLocation.getLatitude())+0.00005);
-            newTeleportLocation.setLongitude((newTeleportLocation.getLongitude() + diffLocation.getLongitude())+0.00005);
+            newTeleportLocation.setLatitude((newTeleportLocation.getLatitude() + diffLocation.getLatitude())+0.00006);
+            newTeleportLocation.setLongitude((newTeleportLocation.getLongitude() + diffLocation.getLongitude())+0.00006);
 
-            System.out.println("Minusas:");
-            System.out.println("lat: " + newTeleportLocation.getLatitude() + " lon: " + newTeleportLocation.getLongitude() + "");
         }
 
         view.loadUrl("javascript:web.setLocation(+" + newTeleportLocation.getLatitude() + "," + newTeleportLocation.getLongitude() + ")");
@@ -222,7 +226,6 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
                 if (heading - prevH > 7 || heading - prevH <-7)
                  {
                     if(WebViewOver) {
-                        System.out.println(heading);
                         prevH = heading;
                         view.loadUrl("javascript:web.setXPos(" + heading + ")");
                     }
@@ -252,7 +255,6 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
                     if (pitch - prevP >3 || pitch - prevP <-3)
                      {
                         if(WebViewOver) {
-                            System.out.println(pitch);
                             prevP= pitch;
                             view.loadUrl("javascript:web.setZPos(" + pitch + ")");
                         }
