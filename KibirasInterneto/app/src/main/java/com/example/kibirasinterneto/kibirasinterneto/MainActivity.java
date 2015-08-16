@@ -220,8 +220,7 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
 
                     senMagnetometerlastUpdate = curTime;
                 }
-
-                prevHead = heading;
+                
 
                 if (event.sensor.getType() == Sensor.TYPE_ACCELEROMETER) {
                     float mOrientation[] = new float[3];
