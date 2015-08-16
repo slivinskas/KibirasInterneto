@@ -32,7 +32,8 @@ import android.hardware.SensorEventListener;
 import android.hardware.SensorManager;
 
 public class MainActivity extends AppCompatActivity implements SensorEventListener {
-
+    // 38.909622,-77.034628
+    // time sq 40.7580441, -73.9854593
     Location oldLocation;
     double teleportLatitude = 40.7580441;
     double teleportLongitude =  -73.9854593;
@@ -40,6 +41,7 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
     Location newTeleportLocation;
     String url = "http://kibirasinterneto.azurewebsites.net/Web/template.html";
     WebView view;
+    Boolean onCreteOver = false;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -79,17 +81,39 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
             public void onLocationChanged(Location location) {
                 if (oldLocation == null) {
                     oldLocation = location;
-                    return;
 
+                    System.out.print("current x " + location.getLatitude());
+                    System.out.print("current y " + location.getLatitude());
+                    return;
                 }
                 diffLocation.setLatitude(oldLocation.getLatitude() - location.getLatitude());
                 diffLocation.setLongitude(oldLocation.getLongitude() - location.getLongitude());
+                float Currentdistant = distFrom((float)oldLocation.getLatitude(), (float)oldLocation.getLongitude(), (float)location.getLatitude(),(float)location.getLongitude());
+
+                ConvertCoordinates((double)Currentdistant);
                 oldLocation = location;
-                ConvertCoordinates();
+                view.loadUrl("javascript:web.setLocation(+"+newTeleportLocation.getLatitude()+","+newTeleportLocation.getLongitude()+")");
+                System.out.print("Distant " + Currentdistant);
+                System.out.print("current x " + location.getLatitude());
+                System.out.print("current y " + location.getLatitude());
             }
+
         };
         locationManager.requestLocationUpdates(getProviderName(), 1000,
                 1, locationListener);
+        onCreteOver = true;
+    }
+    public static float distFrom(float lat1, float lng1, float lat2, float lng2) {
+        double earthRadius = 6371000; //meters
+        double dLat = Math.toRadians(lat2-lat1);
+        double dLng = Math.toRadians(lng2-lng1);
+        double a = Math.sin(dLat/2) * Math.sin(dLat/2) +
+                Math.cos(Math.toRadians(lat1)) * Math.cos(Math.toRadians(lat2)) *
+                        Math.sin(dLng/2) * Math.sin(dLng/2);
+        double c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a));
+        float dist = (float) (earthRadius * c);
+
+        return dist;
     }
 
     String getProviderName() {
@@ -104,16 +128,26 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
         return locationManager.getBestProvider(criteria, true);
     }
 
-    void ConvertCoordinates(){
+    void ConvertCoordinates(double pDistanceInMeters){
         if(newTeleportLocation.getLatitude() == 0 && newTeleportLocation.getLongitude() ==0){
 
             newTeleportLocation.setLatitude(teleportLatitude);
             newTeleportLocation.setLongitude(teleportLongitude);
         }else {
-            newTeleportLocation.setLatitude(newTeleportLocation.getLatitude() + diffLocation.getLatitude());
-            newTeleportLocation.setLongitude(newTeleportLocation.getLongitude() + diffLocation.getLongitude());
+
+            double degLatKm = 110.574235;
+            double degLongKm = 110.572833;
+            newTeleportLocation.setLatitude(pDistanceInMeters / 1000.0 / degLatKm);
+            newTeleportLocation.setLongitude(pDistanceInMeters / 1000.0 /
+                    degLongKm);
+
+//            newTeleportLocation.setLatitude(newTeleportLocation.getLatitude() + diffLocation.getLatitude());
+//            newTeleportLocation.setLongitude(newTeleportLocation.getLongitude() + diffLocation.getLongitude());
         }
-        view.loadUrl("javascript:web.setLocation(+"+(newTeleportLocation.getLatitude())+","+(newTeleportLocation.getLongitude())+")");
+        System.out.print("different x "+diffLocation.getLatitude());
+        System.out.print("different y "+diffLocation.getLongitude());
+
+
 
     }
 
@@ -142,6 +176,7 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
     float[] mGeomagnetic;
     float tempAz;
     float prevAz;
+    long senMagnetometerlastUpdate = 0;
     public void onSensorChanged(SensorEvent event) {
         if (event.sensor.getType() == Sensor.TYPE_ACCELEROMETER)
             mGravity = event.values;
@@ -150,24 +185,26 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
         if (mGravity != null && mGeomagnetic != null) {
             float R[] = new float[9];
             float I[] = new float[9];
-            boolean success = SensorManager.getRotationMatrix(R, I, mGravity, mGeomagnetic);
+            boolean success = SensorManager.getRotationMatrix(R, null, mGravity, mGeomagnetic);
 
             if (success) {
-                float orientation[] = new float[3];
+                float orientation[] = new float[6];
                 SensorManager.getOrientation(R, orientation);
-                if (azimut != null){
-                    tempAz = orientation[0];
-                    if (tempAz - prevAz > 0.10f || tempAz - prevAz < -0.1f){
-                        azimut = tempAz ;
-                        prevAz=azimut;
-                        azimut = azimut*360/(2*3.1412f);
-                    }
-                } else {
-                    azimut = orientation[0];
-                    prevAz = azimut;// orientation contains: azimut, pitch and roll
-                    azimut = azimut*360/(2*3.1412f);
+                float azimuthInRadians = orientation[0];
+                float azimuthInDegress = (float)(Math.toDegrees(azimuthInRadians)+360)%360;
+
+                double heading = (Math.round(azimuthInDegress));
+
+                long curTime = System.currentTimeMillis();
+
+                if ((curTime - senMagnetometerlastUpdate) > 300) {
+
+                    if(onCreteOver)
+                        view.loadUrl("javascript:web.setXPos("+ heading+")");
+
+                    senMagnetometerlastUpdate = curTime;
                 }
-                view.loadUrl("javascript:web.setXPos("+ (double)azimut+")");
+
             }
         }
 
