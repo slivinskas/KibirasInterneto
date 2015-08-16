@@ -95,7 +95,11 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
 
                 ConvertCoordinates((double) Currentdistant);
                 oldLocation = location;
+<<<<<<< HEAD
                 view.loadUrl("javascript:web.setLocation(+" + newTeleportLocation.getLatitude() + "," + newTeleportLocation.getLongitude() + ")");
+=======
+
+>>>>>>> 381d5bcd415f75ec7824a962073df7049740b10c
                 System.out.print("Distant " + Currentdistant);
                 System.out.print("current x " + location.getLatitude());
                 System.out.print("current y " + location.getLatitude());
@@ -148,8 +152,15 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
 //            newTeleportLocation.setLatitude(newTeleportLocation.getLatitude() + diffLocation.getLatitude());
 //            newTeleportLocation.setLongitude(newTeleportLocation.getLongitude() + diffLocation.getLongitude());
         }
+<<<<<<< HEAD
         System.out.print("different x " + diffLocation.getLatitude());
         System.out.print("different y " + diffLocation.getLongitude());
+=======
+        view.loadUrl("javascript:web.setLocation(+"+newTeleportLocation.getLatitude()+","+newTeleportLocation.getLongitude()+")");
+        System.out.print("different x "+diffLocation.getLatitude());
+        System.out.print("different y "+diffLocation.getLongitude());
+
+>>>>>>> 381d5bcd415f75ec7824a962073df7049740b10c
 
 
     }
