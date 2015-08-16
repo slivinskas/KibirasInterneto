@@ -4,7 +4,9 @@
   var mapSetings = {
     center: mPos,
     zoom: 1,
-    streetViewControl: true
+    streetViewControl: false,
+    disableDefaultUI: true,
+    addressControl:false
   };
   var mPos = {lat : 40.757981, lng : -73.985580};
   var webPov = {
@@ -14,8 +16,6 @@
       };
 
   var markerIcon = 'http://icons.iconarchive.com/icons/yellowicon/game-stars/256/Mario-icon.png';
-
- 
 
   var map1, map2;
   var marker1,marker2;
@@ -41,8 +41,8 @@
 
   panoramaLeft.setPosition(mPos);
   panoramaRight.setPosition(mPos);
-  panoramaLeft.setPov(/** @type {google.maps.StreetViewPov} */(webPov));
-  panoramaRight.setPov(/** @type {google.maps.StreetViewPov} */(webPov));
+  panoramaLeft.setPov((webPov));
+  panoramaRight.setPov((webPov));
   panoramaLeft.setVisible(true);
   panoramaRight.setVisible(true);
 }
