@@ -88,9 +88,11 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
                 }
                 diffLocation.setLatitude(oldLocation.getLatitude() - location.getLatitude());
                 diffLocation.setLongitude(oldLocation.getLongitude() - location.getLongitude());
-                ConvertCoordinates();
-                oldLocation = location;
+
+
                 float diff = distFrom((float)oldLocation.getLatitude(),(float) oldLocation.getLongitude(),(float)location.getLatitude(), (float)location.getLongitude() );
+                oldLocation = location;
+                ConvertCoordinates();
                 Toast.makeText(getApplicationContext(), "old: "+location.getLatitude()+" "+location.getLongitude()+" new "+newTeleportLocation.getLatitude()+","+newTeleportLocation.getLongitude()+" skirtumas: "+diff+"" ,
                         Toast.LENGTH_LONG).show();
             }
@@ -132,14 +134,10 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
             newTeleportLocation.setLongitude(teleportLongitude);
         }else {
 
-            double degLatKm = 110.574235;
-            double degLongKm = 110.572833;
-
            newTeleportLocation.setLatitude(newTeleportLocation.getLatitude() + diffLocation.getLatitude());
            newTeleportLocation.setLongitude(newTeleportLocation.getLongitude() + diffLocation.getLongitude());
         }
         view.loadUrl("javascript:web.setLocation(+" + newTeleportLocation.getLatitude() + "," + newTeleportLocation.getLongitude() + ")");
-
 
     }
 
@@ -169,6 +167,8 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
     float tempAz;
     float prevAz;
     long senMagnetometerlastUpdate = 0;
+    long senAccelerometerlastUpdate = 0;
+
     public void onSensorChanged(SensorEvent event) {
         if (event.sensor.getType() == Sensor.TYPE_ACCELEROMETER)
             mGravity = event.values;
@@ -196,8 +196,33 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
 
                     senMagnetometerlastUpdate = curTime;
                 }
+                if (event.sensor.getType() == Sensor.TYPE_ACCELEROMETER) {
+                    float mOrientation[] = new float[3];
+                    System.arraycopy(event.values, 0, mGravity, 0, event.values.length);
 
+                    SensorManager.getRotationMatrix(null, I, mGravity, mGeomagnetic);
+
+                    SensorManager.getOrientation(R, mOrientation);
+
+                    float pitchInRadians = mOrientation[2];
+                    float pitchInDegress = (float) (Math.toDegrees(pitchInRadians) + 360) % 360;
+
+                    double pitch = (Math.round(pitchInDegress));
+
+                    if (pitch < 180){
+                        pitch = pitch  - 90;
+                    } else
+                    {
+                        pitch = -pitch  + 270;
+                    }
+                    
+                    if ((curTime - senAccelerometerlastUpdate) > 300) {
+                        view.loadUrl("javascript:web.setZPos(" + pitch + ")");
+                        senAccelerometerlastUpdate = curTime;
+                    }
+                }
             }
+
         }
 
     }
