@@ -1,13 +1,12 @@
 var size = {
-	that : this,
 	width : 0,
 	height : 0,
 	update : function () {
-		that.width = $( document ).width()/2;
-		that.height = $( document ).height()/2;
-		$( "#map1").width(that.width);
-		$( "#map2").height(that.height);
-		$( "#map1").width(that.width);
-		$( "#map2").height(that.height);
+		size.width = $( document ).width()/2;
+		size.height = $( document ).height()/2;
+		$( "#map1").width(size.width);
+		$( "#map2").height(size.height);
+		$( "#map1").width(size.width);
+		$( "#map2").height(size.height);
 	}
 }
