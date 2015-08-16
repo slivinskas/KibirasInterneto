@@ -21,6 +21,7 @@ import android.view.WindowManager;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 import android.os.Bundle;
@@ -64,9 +65,10 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
             @Override
             public void onPageFinished(WebView view, String url) {
                 super.onPageFinished(view, url);
-                view.loadUrl("javascript:web.setXPos("+ heading+")");
+                view.loadUrl("javascript:web.setXPos(" + heading + ")");
                 WebViewOver = true;
-
+                ImageView loadingScreen = (ImageView) findViewById(R.id.imageView);
+                loadingScreen.setVisibility(View.GONE);
             }
         });
         String provider = getProviderName();
@@ -110,7 +112,7 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
 
         };
         locationManager.requestLocationUpdates(getProviderName(), 1000,
-                3, locationListener);
+                1, locationListener);
     }
     public static float distFrom(float lat1, float lng1, float lat2, float lng2) {
         double earthRadius = 6371000; //meters
@@ -142,17 +144,21 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
             newTeleportLocation.setLatitude(teleportLatitude);
             newTeleportLocation.setLongitude(teleportLongitude);
         }else {
-             double degLatKm = 110.574235;
-             double degLongKm = 110.572833;
-             double deltaLat = pDistanceInMeters / 1000.0 / degLatKm;
-             double deltaLong = pDistanceInMeters / 1000.0 / degLongKm;
-           // Toast.makeText(getApplicationContext(), ""+newTeleportLocation.getLatitude()+" "+ newTeleportLocation+"" ,
-           //         Toast.LENGTH_LONG).show();
-            newTeleportLocation.setLatitude(newTeleportLocation.getLatitude() - deltaLat);
-            newTeleportLocation.setLongitude(newTeleportLocation.getLongitude() - deltaLong);
+           //  double degLatKm = 110.574235;
+           //  double degLongKm = 110.572833;
+           //  double deltaLat = pDistanceInMeters / 1000.0 / degLatKm;
+          //  double deltaLong = pDistanceInMeters / 1000.0 / degLongKm;
+           // newTeleportLocation.setLatitude(newTeleportLocation.getLatitude() - deltaLat);
+           // newTeleportLocation.setLongitude(newTeleportLocation.getLongitude() - deltaLong);
 
-            newTeleportLocation.setLatitude(newTeleportLocation.getLatitude() + diffLocation.getLatitude());
-          newTeleportLocation.setLongitude(newTeleportLocation.getLongitude() + diffLocation.getLongitude());
+           newTeleportLocation.setLatitude(newTeleportLocation.getLatitude() - diffLocation.getLatitude());
+          newTeleportLocation.setLongitude(newTeleportLocation.getLongitude() - diffLocation.getLongitude());
+            System.out.println("Minusas:");
+            System.out.println("lat: " + newTeleportLocation.getLatitude() + " lon: " + newTeleportLocation.getLongitude() + "");
+//            newTeleportLocation.setLatitude(newTeleportLocation.getLatitude() + diffLocation.getLatitude());
+//            newTeleportLocation.setLongitude(newTeleportLocation.getLongitude() + diffLocation.getLongitude());
+//            System.out.println("Pliusas:");
+//            System.out.println("lat: " + newTeleportLocation.getLatitude() + " lon: " + newTeleportLocation.getLongitude() + "");
         }
         view.loadUrl("javascript:web.setLocation(+" + newTeleportLocation.getLatitude() + "," + newTeleportLocation.getLongitude() + ")");
 
