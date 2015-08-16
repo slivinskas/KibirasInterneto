@@ -15,13 +15,13 @@
         zoom: 1
       };
 
-  var markerIcon = 'http://icons.iconarchive.com/icons/yellowicon/game-stars/256/Mario-icon.png';
+  var markerIcon = 'http://unconference.adform.com/img/unconference/adform-logo.png';
 
   var map1, map2;
   var marker1,marker2;
 
   function initPano() {
-  
+
   map1 = new google.maps.Map(document.getElementById('map1'), mapSetings);
   map2 = new google.maps.Map(document.getElementById('map2'), mapSetings);
   marker1 = new google.maps.Marker({
