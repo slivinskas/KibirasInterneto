@@ -14,6 +14,7 @@ import android.view.View;
 import android.view.WindowManager;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.hardware.SensorEventListener;
 
@@ -24,8 +25,8 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
     //54.9019108,23.9377343
 
     Location oldLocation;
-    double teleportLatitude = 40.7580441;
-    double teleportLongitude = -73.9854593;
+    double teleportLatitude = 54.9019108;
+    double teleportLongitude = 23.9377343;
 
     Location diffLocation;
     Location newTeleportLocation;
@@ -60,6 +61,14 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
                 WebViewOver = true;
                 ImageView loadingScreen = (ImageView) findViewById(R.id.imageView);
                 loadingScreen.setVisibility(View.GONE);
+            }
+        });
+        Button button = (Button) findViewById(R.id.button);
+
+        button.setOnClickListener(new View.OnClickListener() {
+            public void onClick(View v) {
+
+                view.loadUrl("javascript:changeAdds('photo')");
             }
         });
 
@@ -106,7 +115,6 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
                 }
 
 
-
                 float diff = distFrom((float)oldLocation.getLatitude(),(float) oldLocation.getLongitude(),(float)location.getLatitude(), (float)location.getLongitude() );
                 oldLocation = location;
 
@@ -148,22 +156,11 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
             newTeleportLocation.setLatitude(teleportLatitude);
             newTeleportLocation.setLongitude(teleportLongitude);
         }else {
-           //  double degLatKm = 110.574235;
-           //  double degLongKm = 110.572833;
-           //  double deltaLat = pDistanceInMeters / 1000.0 / degLatKm;
-          //  double deltaLong = pDistanceInMeters / 1000.0 / degLongKm;
-           // newTeleportLocation.setLatitude(newTeleportLocation.getLatitude() - deltaLat);
-           // newTeleportLocation.setLongitude(newTeleportLocation.getLongitude() - deltaLong);
-
-            newTeleportLocation.setLatitude(newTeleportLocation.getLatitude() + diffLocation.getLatitude());
-            newTeleportLocation.setLongitude(newTeleportLocation.getLongitude() + diffLocation.getLongitude());
+            newTeleportLocation.setLatitude((newTeleportLocation.getLatitude() + diffLocation.getLatitude())+0.00002);
+            newTeleportLocation.setLongitude((newTeleportLocation.getLongitude() + diffLocation.getLongitude())+0.00002);
 
             System.out.println("Minusas:");
             System.out.println("lat: " + newTeleportLocation.getLatitude() + " lon: " + newTeleportLocation.getLongitude() + "");
-//            newTeleportLocation.setLatitude(newTeleportLocation.getLatitude() + diffLocation.getLatitude());
-//            newTeleportLocation.setLongitude(newTeleportLocation.getLongitude() + diffLocation.getLongitude());
-//            System.out.println("Pliusas:");
-//            System.out.println("lat: " + newTeleportLocation.getLatitude() + " lon: " + newTeleportLocation.getLongitude() + "");
         }
 
         view.loadUrl("javascript:web.setLocation(+" + newTeleportLocation.getLatitude() + "," + newTeleportLocation.getLongitude() + ")");
@@ -217,10 +214,11 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
                 long curTime = System.currentTimeMillis();
                 if (heading - prevH > 7 || heading - prevH <-7)
                  {
-                    if(WebViewOver) 
+                    if(WebViewOver) {
                         System.out.println(heading);
                         prevH = heading;
-                        view.loadUrl("javascript:web.setXPos("+ heading+")");
+                        view.loadUrl("javascript:web.setXPos(" + heading + ")");
+                    }
 
                      senMagnetometerlastUpdate = curTime;
                 }
